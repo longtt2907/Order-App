@@ -1,76 +1,55 @@
-import 'dart:developer';
+// ignore_for_file: deprecated_member_use
 
-import 'package:demo_12_03/Screen/AddFood/AddFood.dart';
 import 'package:demo_12_03/Screen/AddOption_tamthoi/ChooseList.dart';
 import 'package:demo_12_03/components/round_button.dart';
 import 'package:demo_12_03/constants.dart';
+import 'package:demo_12_03/controllers/category_controller.dart';
+import 'package:demo_12_03/models/category_model.dart';
 import 'package:flutter/material.dart';
 
 class AddOptionMain extends StatefulWidget {
-  final List<String> danhmuc;
-  const AddOptionMain({Key? key, required this.danhmuc}) : super(key: key);
+  const AddOptionMain({Key? key}) : super(key: key);
 
   @override
   State<AddOptionMain> createState() => _AddOptionMainState();
 }
 
 class _AddOptionMainState extends State<AddOptionMain> {
+  final CategoryService categoryService = CategoryService();
   List<String> danhmucSelected = [];
-  void themDanhMuc(String itemValue) {
-    setState(() {
-      widget.danhmuc.add(itemValue);
+  List<Category> listCategory = [];
+
+  void themDanhMuc(String nameCate) {
+    categoryService.createCategory(nameCate).then((result) {
+      setState(() {
+        listCategory.add(result);
+      });
     });
     Navigator.pop(context);
   }
 
-  void xoaDanhMuc(List<String> dm) {
-    setState(() {
-      for (int i = 0; i < dm.length; i++) {
-        widget.danhmuc.remove(dm[i]);
-      }
+  void xoaDanhMuc(String categoryId) {
+    categoryService.deleteCategory(categoryId).then((result) {
+      setState(() {
+        listCategory.removeWhere((cate) => cate.id == categoryId);
+      });
     });
   }
 
   void openDialog(context) {
-    Size size = MediaQuery.of(context).size;
     String itemValue = '';
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-              child: Container(
-                  width: size.width * 0.8,
-                  height: size.width * 0.4,
-                  // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Column(children: [
-                    const SizedBox(height: 15),
-                    const Text(
-                      'Thêm danh mục',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                        color: Color.fromARGB(162, 0, 0, 0),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        // height: size.width * 0.25,
-                        // decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //         color: kPrimaryColor,
-                        //         width: 0.9,
-                        //         style: BorderStyle.solid)),
-                        child: Center(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              // alignLabelWithHint: true,
+          return AlertDialog(
+            title: const Text("Thêm danh mục"),
+            content: TextField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
                               labelText: "Tên danh mục",
-                              labelStyle: TextStyle(color: kPrimaryColor),
-                              // hintText: "Tên danh mục",
+                              labelStyle: TextStyle(color: Colors.grey),
                               focusColor: kPrimaryColor,
-                              focusedBorder: UnderlineInputBorder(
+                              focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: kPrimaryColor),
                               ),
                             ),
@@ -78,86 +57,134 @@ class _AddOptionMainState extends State<AddOptionMain> {
                               itemValue = value;
                             },
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      // padding:
-                      //     EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Row(children: [
-                        Expanded(
-                          child: RoundedButton(
-                            hintText: "OK",
-                            onPressed: () => () {
-                              themDanhMuc(itemValue);
-                            },
-                          ),
-                        ),
-                        Expanded(
-                            child: RoundedButton(
-                          hintText: "Cancel",
-                          onPressed: () => () {
-                            Navigator.pop(context);
-                          },
-                        ))
-                      ]),
-                    )
-                  ])));
+            actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Hủy"),
+            ),
+            FlatButton(
+                textColor: kPrimaryColor,
+                onPressed: () => themDanhMuc(itemValue),
+                child: const Text("Tạo mới")),
+          ],
+          );
         });
+  }
+
+  Widget showListCategory() {
+    return ListView.builder(
+      padding: EdgeInsets.all(10),
+      itemCount: listCategory.length,
+      itemBuilder: (BuildContext context, int index) {
+        return rowItem(context, index);
+      },
+    );
+  }
+
+  Widget rowItem(context, index) {
+    return Dismissible(
+        key: Key(listCategory[index].id),
+        confirmDismiss: (direction) async {
+          return await confirmDismiss(context);
+        },
+        onDismissed: (direction) {
+          xoaDanhMuc(listCategory[index].id);
+        },
+        background: deleteBgItem(),
+        child: Card(
+          child: ListTile(
+            title: Text(listCategory[index].name),
+          ),
+        ));
+  }
+
+  Future<bool> confirmDismiss(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Xác nhận"),
+          content: const Text("Bạn có chắc muốn xóa danh mục này?"),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("Hủy"),
+            ),
+            FlatButton(
+                textColor: Colors.red,
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("Xóa")),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget deleteBgItem() {
+    return Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.only(right: 20),
+        margin: EdgeInsets.all(3),
+        color: Colors.red,
+        child: Icon(Icons.delete, color: Colors.white));
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    String? chooseOption = widget.danhmuc.first;
+    // Category chooseOption = listCategory.first;
     return Scaffold(
         appBar: AppBar(
           title: Text("Thêm món ăn"),
           centerTitle: true,
           leading: BackButton(onPressed: () {
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => const AddFood()));
-            Navigator.pop(context, widget.danhmuc);
+            Navigator.pop(context, danhmucSelected);
           }),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.remove),
-              onPressed: () {
-                xoaDanhMuc(danhmucSelected);
-              },
-            )
-          ],
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.remove),
+          //     onPressed: () {
+          //       // xoaDanhMuc(danhmucSelected);
+          //     },
+          //   )
+          // ],
           backgroundColor: kPrimaryColor,
           elevation: 4,
         ),
-        body: Container(
-            width: double.infinity,
-            height: size.height,
-            child: Column(
-              children: [
-                Expanded(
-                  child: MultiSelect(
-                    items: widget.danhmuc,
-                    selectedItems: danhmucSelected,
-                    onChanged: (items) {
-                      danhmucSelected = items;
-                    },
-                  ),
-                ),
-                Container(
-                  height: size.width * 0.2,
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: RoundButton(
-                      text: 'Thêm danh mục',
-                      color: kPrimaryColor,
-                      textColor: Colors.white,
-                      press: () => () {
-                            openDialog(context);
-                          }),
-                ),
-              ],
-            )));
+        body: FutureBuilder(
+            future: categoryService.getCategories(),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+              if (snapshot.hasData) {
+                listCategory = snapshot.data!;
+
+                return Container(
+                    width: double.infinity,
+                    height: size.height,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: showListCategory(),
+                        ),
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          height: size.width * 0.2,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              openDialog(context);
+                            },
+                            backgroundColor: kPrimaryColor,
+                            child: Icon(Icons.add),
+                          ),
+                        )
+                      ],
+                    ));
+              }
+
+              return const Center(child: CircularProgressIndicator());
+            }));
   }
 }
 
@@ -176,7 +203,7 @@ class RoundedButton extends StatelessWidget {
     return TextButton(
         style: ButtonStyle(
           minimumSize: MaterialStateProperty.all(
-              Size(size.width * 0.8, size.width * 0.15)),
+              Size(size.width * 0.6, size.width * 0.10)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               side: BorderSide(
                   color: Color.fromARGB(255, 192, 190, 190),

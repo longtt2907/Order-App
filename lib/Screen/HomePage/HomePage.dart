@@ -7,7 +7,7 @@ import 'package:demo_12_03/constants.dart';
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
 
-const Color textColor = kPrimaryTextColor;
+const Color textColor = Colors.white;
 const Color labelColor = Colors.black;
 
 class HomePage extends StatefulWidget {
@@ -46,8 +46,8 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         width: double.infinity,
         height: size.height,
-        padding: padding,
-        color: kPrimaryColor,
+        // padding: padding,
+        color: Colors.white,
         child: CustomScrollView(
           physics: ClampingScrollPhysics(),
           slivers: <Widget>[
@@ -68,18 +68,20 @@ class _HomePageState extends State<HomePage> {
   SliverToBoxAdapter _buildHeader(double height) {
     return SliverToBoxAdapter(
       child: Container(
-          height: height * 0.25,
+          alignment: Alignment.center,
+          height: height * 0.3,
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: kPrimaryColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(45.0),
               bottomRight: Radius.circular(45.0),
-              topLeft: Radius.circular(45.0),
-              topRight: Radius.circular(45.0),
+              // topLeft: Radius.circular(45.0),
+              // topRight: Radius.circular(45.0),
             ),
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               // const SizedBox(height: 10),
               const Text(
@@ -90,16 +92,13 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 10),
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    "1.000.000",
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                    ),
+              Center(
+                child: Text(
+                  "1.000.000",
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -181,15 +180,17 @@ SliverToBoxAdapter _buildBodyChart(double height) {
     child: Container(
       height: height * 0.7,
       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 35),
-      decoration: const BoxDecoration(
+      margin: EdgeInsets.symmetric(horizontal:20),
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(45.0),
-          bottomRight: Radius.circular(45.0),
-          topLeft: Radius.circular(45.0),
-          topRight: Radius.circular(45.0),
+        // boxShadow:,
+        // border: Border.all(
+        //     color: labelColor,
+        //     width: 0.5,
+        //     style: BorderStyle.solid),
+        // borderRadius: BorderRadius.circular(5),
         ),
-      ),
+      
       child: Column(
         children: [
           Row(

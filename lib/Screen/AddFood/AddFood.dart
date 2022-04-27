@@ -142,13 +142,13 @@ class InfoContainer extends StatelessWidget {
                           // );
                         }),
                   ),
-                  InputContainer(
-                    child: TapInputField(
-                        hintText: "Đơn vị",
-                        onTap: () => () {
-                              pageBuilder(context, danhmuc);
-                            }),
-                  ),
+                  // InputContainer(
+                  //   child: TapInputField(
+                  //       hintText: "Đơn vị",
+                  //       onTap: () => () {
+                  //             pageBuilder(context, danhmuc);
+                  //           }),
+                  // ),
                 ])),
             Container(
                 color: Colors.white,

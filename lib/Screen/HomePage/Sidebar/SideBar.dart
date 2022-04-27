@@ -157,12 +157,12 @@ void selectedItem(BuildContext context, int index) {
     case 3:
       List<String> dm = ['trà sữa', 'trà trái cây', 'topping'];
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => AddOptionMain(danhmuc: dm),
+        builder: (context) => AddOptionMain(),
       ));
 
       break;
     case 4:
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.push(context, MaterialPageRoute(
         builder: (context) => AddFood(),
       ));
       break;
