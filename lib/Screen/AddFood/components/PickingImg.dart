@@ -1,16 +1,27 @@
 import 'dart:io';
 import "package:image_picker/image_picker.dart";
 import "package:flutter/material.dart";
+import 'package:cloudinary_public/cloudinary_public.dart';
+
+final cloudinary = CloudinaryPublic('santaclaus', 'dpfzjfpa', cache: false);
 
 class PickingImg extends StatefulWidget {
-  const PickingImg({Key? key}) : super(key: key);
+  final String? image;
+  final Function(String) callback;
+  const PickingImg({Key? key, this.image, required this.callback})
+      : super(key: key);
 
   @override
   State<PickingImg> createState() => _PickingImgState();
 }
 
 class _PickingImgState extends State<PickingImg> {
-  File? _image;
+  String? _image;
+  // String? get imageUrl => _image;
+  String? imageUrl() {
+    return _image;
+  }
+
   _imgFromCamera() async {
     var image = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 50);
@@ -19,17 +30,38 @@ class _PickingImgState extends State<PickingImg> {
       return;
     }
     setState(() {
-      _image = File(image.path);
+      _image = image.path;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.image != null) {
+      _image = widget.image;
+    }
   }
 
   void _imgFromGallery() async {
     var image = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 50);
-    if (image == null) return;
-    setState(() {
-      _image = File(image.path);
-    });
+    if (image == null) {
+      return;
+    } else {
+      try {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(image.path,
+                resourceType: CloudinaryResourceType.Image));
+
+        widget.callback(response.secureUrl);
+        setState(() {
+          _image = response.secureUrl;
+        });
+      } on CloudinaryException catch (e) {
+        print(e.message);
+      }
+    }
   }
 
   void _showPicker(context) {
@@ -71,22 +103,20 @@ class _PickingImgState extends State<PickingImg> {
               _showPicker(context);
             },
             child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 199, 198, 198),
+              decoration: const BoxDecoration(
+                color: Colors.white,
               ),
-              // radius: 55,
-              // backgroundColor: Color(0xffFDCF09),
               child: _image != null
                   ? ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.file(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
                         _image!,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.fitHeight,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.cover,
                       ),
                     )
-                  : Container(
+                  : SizedBox(
                       width: size.width * 0.3,
                       height: size.width * 0.3,
                       child: Icon(

@@ -6,18 +6,25 @@ class RoundedInputField extends StatelessWidget {
   final IconData? icon;
   final ValueChanged<String>? onChanged;
   final IconData? suffixIcon;
+  final String? initialValue;
+  final bool isNumber;
+
   const RoundedInputField({
     Key? key,
     this.hintText,
     this.icon,
     this.onChanged,
     this.suffixIcon,
+    this.initialValue,
+    this.isNumber = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+        initialValue: initialValue,
         onChanged: onChanged,
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
           icon: Icon(icon, color: kPrimaryColor),
           hintText: hintText,

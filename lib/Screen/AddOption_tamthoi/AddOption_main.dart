@@ -44,29 +44,29 @@ class _AddOptionMainState extends State<AddOptionMain> {
           return AlertDialog(
             title: const Text("Thêm danh mục"),
             content: TextField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Tên danh mục",
-                              labelStyle: TextStyle(color: Colors.grey),
-                              focusColor: kPrimaryColor,
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              itemValue = value;
-                            },
-                          ),
-            actions: <Widget>[
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Hủy"),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Tên danh mục",
+                labelStyle: TextStyle(color: Colors.grey),
+                focusColor: kPrimaryColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: kPrimaryColor),
+                ),
+              ),
+              onChanged: (value) {
+                itemValue = value;
+              },
             ),
-            FlatButton(
-                textColor: kPrimaryColor,
-                onPressed: () => themDanhMuc(itemValue),
-                child: const Text("Tạo mới")),
-          ],
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Hủy"),
+              ),
+              FlatButton(
+                  textColor: kPrimaryColor,
+                  onPressed: () => themDanhMuc(itemValue),
+                  child: const Text("Tạo mới")),
+            ],
           );
         });
   }
@@ -132,7 +132,6 @@ class _AddOptionMainState extends State<AddOptionMain> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // Category chooseOption = listCategory.first;
     return Scaffold(
         appBar: AppBar(
           title: Text("Thêm món ăn"),
@@ -140,14 +139,6 @@ class _AddOptionMainState extends State<AddOptionMain> {
           leading: BackButton(onPressed: () {
             Navigator.pop(context, danhmucSelected);
           }),
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(Icons.remove),
-          //     onPressed: () {
-          //       // xoaDanhMuc(danhmucSelected);
-          //     },
-          //   )
-          // ],
           backgroundColor: kPrimaryColor,
           elevation: 4,
         ),

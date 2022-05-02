@@ -1,5 +1,6 @@
 import 'package:demo_12_03/Screen/AddFood/AddFood.dart';
 import 'package:demo_12_03/Screen/AddOption_tamthoi/AddOption_main.dart';
+import 'package:demo_12_03/Screen/Food_Screen/food_screen.dart';
 import 'package:demo_12_03/Screen/HomePage/HomePage.dart';
 import 'package:demo_12_03/Screen/Login/login.dart';
 import 'package:demo_12_03/Screen/Order/Order.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           primaryColor: kPrimaryColor,
           scaffoldBackgroundColor: Colors.white,
           backgroundColor: Colors.white),
-      home: AddOptionMain(),
+      home: FoodScreen(),
     );
   }
 }
