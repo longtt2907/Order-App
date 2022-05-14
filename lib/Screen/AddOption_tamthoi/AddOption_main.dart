@@ -136,15 +136,15 @@ class _AddOptionMainState extends State<AddOptionMain> {
             height: size.height,
             child: Column(
               children: [
-                Expanded(
-                  child: MultiSelect(
-                    items: widget.danhmuc,
-                    selectedItems: danhmucSelected,
-                    onChanged: (items) {
-                      danhmucSelected = items;
-                    },
-                  ),
-                ),
+                // Expanded(
+                //   child: MultiSelect(
+                //     items: widget.danhmuc,
+                //     selectedItems: danhmucSelected,
+                //     onChanged: (items) {
+                //       danhmucSelected = items;
+                //     },
+                //   ),
+                // ),
                 Container(
                   height: size.width * 0.2,
                   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -179,7 +179,7 @@ class RoundedButton extends StatelessWidget {
               Size(size.width * 0.8, size.width * 0.15)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               side: BorderSide(
-                  color: Color.fromARGB(255, 192, 190, 190),
+                  color: Color.fromRGBO(192, 190, 190, 1),
                   style: BorderStyle.solid))),
         ),
         child: Text(hintText, style: TextStyle(color: kPrimaryLightColor)),
