@@ -4,7 +4,7 @@ const kPrimaryColor = Color(0xFFe67e22);
 const kPrimaryLightColor = Color.fromARGB(255, 236, 145, 59);
 const kPrimaryTextColor = Color.fromARGB(255, 201, 96, 5);
 const kBackgroundColor = Color.fromARGB(255, 202, 201, 201);
-const BASE_URL = "http://192.168.1.72:5000";
+const BASE_URL = "http://172.20.10.2:5000";
 
 class LabelText extends StatelessWidget {
   final String text;

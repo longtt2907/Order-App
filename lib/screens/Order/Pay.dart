@@ -69,68 +69,63 @@ class _PayState extends State<Pay> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Pay",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 22,
-            ),
+      appBar: AppBar(
+        title: Text(
+          "Pay",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 22,
           ),
-          centerTitle: false,
-          leading: BackButton(
-              color: Colors.black, onPressed: () => {Navigator.pop(context)}),
-          backgroundColor: Colors.white,
-          elevation: 4,
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Color.fromARGB(255, 202, 201, 201),
-          // padding: EdgeInsets.all(20),
+        centerTitle: false,
+        leading: BackButton(
+            color: Colors.black, onPressed: () => {Navigator.pop(context)}),
+        backgroundColor: Colors.white,
+        elevation: 4,
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Color.fromARGB(255, 202, 201, 201),
+        // padding: EdgeInsets.all(20),
+        margin: EdgeInsets.only(bottom: size.height < 600 ? 140 : 170),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: size.height * 0.75,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 5),
-                      InfoPay(
-                          size: size,
-                          product: widget.product,
-                          onChanged: (item) {
-                            priceInfo = item.price;
-                            dishSize = item.title;
-                          }),
-                      widget.product.isLinked
-                          ? DetailPay(
-                              size: size,
-                              product: widget.product,
-                              onChanged: (items) {
-                                priceDetail = 0;
-                                subDish = items;
-                                log('${subDish}');
-                                for (var item in items)
-                                  priceDetail =
-                                      priceDetail + item.prices[0].price as int;
-                              })
-                          : const SizedBox(height: 0),
-                      NotePay(onChanged: (val) => {description = val}),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ConfirmPay(
-                size: size,
-                onChanged: (val) => {quantity = val},
-                onSubmit: () => handleSubmit(),
-              ),
+              const SizedBox(height: 5),
+              InfoPay(
+                  size: size,
+                  product: widget.product,
+                  onChanged: (item) {
+                    priceInfo = item.price;
+                    dishSize = item.title;
+                  }),
+              widget.product.isLinked
+                  ? DetailPay(
+                      size: size,
+                      product: widget.product,
+                      onChanged: (items) {
+                        priceDetail = 0;
+                        subDish = items;
+                        log('${subDish}');
+                        for (var item in items)
+                          priceDetail =
+                              priceDetail + item.prices[0].price as int;
+                      })
+                  : const SizedBox(height: 0),
+              NotePay(onChanged: (val) => {description = val}),
+              const SizedBox(height: 5)
             ],
           ),
-        ));
+        ),
+      ),
+      bottomSheet: ConfirmPay(
+        size: size,
+        onChanged: (val) => {quantity = val},
+        onSubmit: () => handleSubmit(),
+      ),
+    );
   }
 }
 
@@ -170,86 +165,81 @@ class _ConfirmPayState extends State<ConfirmPay> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        // margin: EdgeInsets.symmetric(vertical: 20),
-        decoration: BoxDecoration(
-          // color: Colors.white70,
-          color: backgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15.0),
-            topRight: Radius.circular(15.0),
-          ),
-          border: Border.all(
-            color: kBackgroundColor,
-            width: 1.0,
-            style: BorderStyle.solid,
-          ),
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      height: widget.size.height < 600 ? 140 : 170,
+      // margin: EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        // color: Colors.white70,
+        color: backgroundColor,
+        border: Border.all(
+          color: kBackgroundColor,
+          width: 1.0,
+          style: BorderStyle.solid,
         ),
-        // borderRadius: BorderRadius.circular(15),
+      ),
+      // borderRadius: BorderRadius.circular(15),
 
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Expanded(
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          Expanded(
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: TextButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.black,
+                      )),
+                      child: Text("-", style: TextStyle(color: Colors.white)),
+                      onPressed: () => subtract(),
+                    ),
+                  ),
+                  Container(
+                      alignment: Alignment.center,
                       width: 30,
                       height: 30,
-                      child: TextButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.black,
-                        )),
-                        child: Text("-", style: TextStyle(color: Colors.white)),
-                        onPressed: () => subtract(),
-                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.black,
+                              width: 1.0,
+                              style: BorderStyle.solid)),
+                      child: Text("${i}",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: TextButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black)),
+                      child: Text("+", style: TextStyle(color: Colors.white)),
+                      onPressed: () => add(),
                     ),
-                    Container(
-                        alignment: Alignment.center,
-                        width: 30,
-                        height: 30,
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.black,
-                                width: 1.0,
-                                style: BorderStyle.solid)),
-                        child: Text("${i}",
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                    SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: TextButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.black)),
-                        child: Text("+", style: TextStyle(color: Colors.white)),
-                        onPressed: () => add(),
-                      ),
-                    ),
-                    // TextField(
-                    //   keyboardType: TextInputType.number,
-                    // ),
-                  ],
-                ),
+                  ),
+                  // TextField(
+                  //   keyboardType: TextInputType.number,
+                  // ),
+                ],
               ),
             ),
-            SizedBox(
-              height: widget.size.width * 0.2,
-              child: RoundButton(
-                  text: 'Hoàn tất',
-                  color: kPrimaryColor,
-                  textColor: Colors.white,
-                  press: () => widget.onSubmit),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: widget.size.width * 0.2,
+            child: RoundButton(
+                text: 'Hoàn tất',
+                color: kPrimaryColor,
+                textColor: Colors.white,
+                press: () => widget.onSubmit),
+          ),
+        ],
       ),
     );
   }

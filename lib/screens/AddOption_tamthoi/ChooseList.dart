@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import "package:flutter/material.dart";
 
-import '../../constants.dart';
-import '../../models/product_model.dart';
+import 'package:demo_12_03/constants.dart';
+import 'package:demo_12_03/models/product_model.dart';
 
 // Multi Select widget
 // This widget is reusable

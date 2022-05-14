@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:demo_12_03/screens/Order/Pay.dart';
 import "package:flutter/material.dart";
-import '../../../../constants.dart';
-import '../../../../models/bill_model.dart';
-import '../../../../models/product_model.dart';
+import 'package:demo_12_03/constants.dart';
+import 'package:demo_12_03/models/bill_model.dart';
+import 'package:demo_12_03/models/product_model.dart';
 
 class ItemsOrder extends StatelessWidget {
   const ItemsOrder({

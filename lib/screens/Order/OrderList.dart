@@ -4,7 +4,7 @@ import 'package:demo_12_03/components/dotted_divider.dart';
 import 'package:demo_12_03/constants.dart';
 import "package:flutter/material.dart";
 
-import '../../models/bill_model.dart';
+import 'package:demo_12_03/models/bill_model.dart';
 import 'Order.dart';
 
 class OrderList extends StatefulWidget {
@@ -159,7 +159,7 @@ class _OrderListState extends State<OrderList> {
                     flex: 1,
                     child: OrderListButton(
                       title: "Xóa",
-                      color: Colors.greenAccent,
+                      color: Color(0xFF36AE7C),
                       onPressed: () => handleDeleteBill(),
                     ),
                   ),
@@ -272,11 +272,7 @@ class _ItemListState extends State<ItemList> {
     Size size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
-      constraints: BoxConstraints(
-        minHeight: 90,
-        maxHeight: 140,
-      ),
-      // height: 100,
+      height: widget.dish.note!.isEmpty ? 105 : 140,
       child: Column(
         children: [
           Row(
@@ -358,24 +354,24 @@ class _ItemListState extends State<ItemList> {
               ),
             ],
           ),
-          // dish.note!.isEmpty
-          //     ? const SizedBox(height: 0)
-          //     : Container(
-          //         alignment: Alignment.centerLeft,
-          //         padding: EdgeInsets.all(10),
-          //         margin: EdgeInsets.only(left: 10),
-          //         child: Row(
-          //           children: [
-          //             Icon(Icons.note),
-          //             const SizedBox(height: 10),
-          //             Text(
-          //               "${dish.note}",
-          //               softWrap: true,
-          //               overflow: TextOverflow.ellipsis,
-          //             ),
-          //           ],
-          //         ),
-          //       ),
+          widget.dish.note!.isEmpty
+              ? const SizedBox(height: 0)
+              : Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  // margin: EdgeInsets.only(left: 10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.note, color: kBackgroundColor),
+                      const SizedBox(width: 10),
+                      Text(
+                        "${widget.dish.note}",
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
           Expanded(
               child:
                   Dash(length: size.width - 40, dashColor: kBackgroundColor)),

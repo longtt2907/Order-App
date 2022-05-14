@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:demo_12_03/screens/HomePage/HomePage.dart';
 import 'package:demo_12_03/screens/Order/Components/Body/ItemsOrder.dart';
 import 'package:demo_12_03/screens/Order/Components/BottomBar/BottomBar.dart';
 import 'package:demo_12_03/screens/Order/Components/Sidebar/SidebarOrder.dart';
@@ -15,8 +16,8 @@ import '../../models/bill_model.dart';
 import '../../models/category_model.dart';
 
 class Order extends StatefulWidget {
-  Order({Key? key, this.bill}) : super(key: key);
   late Bill? bill;
+  Order({Key? key, this.bill}) : super(key: key);
   @override
   _OrderState createState() => _OrderState();
 }
@@ -57,7 +58,11 @@ class _OrderState extends State<Order> {
           title: LabelText("Order", Colors.black),
           centerTitle: false,
           leading: BackButton(
-              color: Colors.black, onPressed: () => {Navigator.pop(context)}),
+              color: Colors.black,
+              onPressed: () => {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => HomePage()))
+                  }),
           backgroundColor: Colors.white,
           elevation: 4,
         ),
@@ -74,42 +79,40 @@ class _OrderState extends State<Order> {
   Widget buildBody(double height) {
     return Container(
       margin: EdgeInsets.only(bottom: 110),
-      child: Row(
-        children: [
-          FutureBuilder(
-              future: CategoryService().getCategories(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Category>> snapshot) {
-                if (snapshot.hasData) {
-                  categories = snapshot.data!;
+      child: FutureBuilder(
+          future: CategoryService().getCategories(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+            if (snapshot.hasData) {
+              categories = snapshot.data!;
 
-                  return SideBarOrder(
-                      scrollToId: scrollToId, categories: categories);
-                }
+              return FutureBuilder(
+                  future: ProductService().getProducts(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Product>> snapshot) {
+                    if (snapshot.hasData) {
+                      products = snapshot.data!;
 
-                return const Center(child: CircularProgressIndicator());
-              }),
-          FutureBuilder(
-              future: ProductService().getProducts(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Product>> snapshot) {
-                if (snapshot.hasData) {
-                  products = snapshot.data!;
+                      return Row(children: [
+                        SideBarOrder(
+                            scrollToId: scrollToId, categories: categories),
+                        Expanded(
+                          child: MainBody(
+                            scrollToId: scrollToId,
+                            products: products,
+                            categories: categories,
+                            bill: widget.bill,
+                          ),
+                        )
+                      ]);
+                    }
 
-                  return Expanded(
-                    child: MainBody(
-                      scrollToId: scrollToId,
-                      products: products,
-                      categories: categories,
-                      bill: widget.bill,
-                    ),
-                  );
-                }
+                    return const Center(child: CircularProgressIndicator());
+                  });
+            }
 
-                return const Center(child: CircularProgressIndicator());
-              }),
-        ],
-      ),
+            return const Center(child: CircularProgressIndicator());
+          }),
     );
   }
 }

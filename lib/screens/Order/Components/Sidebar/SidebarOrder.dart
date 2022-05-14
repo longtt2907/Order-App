@@ -2,7 +2,7 @@ import 'package:demo_12_03/constants.dart';
 import "package:flutter/material.dart";
 import 'package:scroll_to_id/scroll_to_id.dart';
 
-import '../../../../models/category_model.dart';
+import 'package:demo_12_03/models/category_model.dart';
 
 class SideBarOrder extends StatelessWidget {
   const SideBarOrder({

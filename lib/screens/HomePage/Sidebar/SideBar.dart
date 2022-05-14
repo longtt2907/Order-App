@@ -53,7 +53,7 @@ class _SidebarState extends State<Sidebar> {
             color: kPrimaryColor,
             child: ListView(
               shrinkWrap: true,
-              padding: padding,
+              padding: EdgeInsets.symmetric(horizontal: 10),
               children: [
                 const SizedBox(height: 100),
                 const SizedBox(height: 16),
@@ -64,7 +64,7 @@ class _SidebarState extends State<Sidebar> {
                 ),
                 checkDoanhThu != false
                     ? Container(
-                        padding: padding,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
@@ -74,7 +74,6 @@ class _SidebarState extends State<Sidebar> {
                           ),
                         ),
                         child: ListView(shrinkWrap: true, children: [
-                          const SizedBox(height: 10),
                           buildMenuChildItem(
                             text: "Ngày",
                             onTap: () => selectedItem(context, 0),
