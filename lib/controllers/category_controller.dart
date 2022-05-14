@@ -47,4 +47,19 @@ class CategoryService {
       throw "Fail to delete category";
     }
   }
+
+  Future<Category> updateCategory(Category category) async {
+    Response res = await put(Uri.parse('$categoryUrl/${category.id}'),
+        headers: {'Content-Type': 'application/json; charset=utf-8'},
+        body: jsonEncode({"name": category.name}));
+
+    if (res.statusCode == 200) {
+      dynamic body = jsonDecode(res.body);
+      Category newCategory = Category.fromJson(body);
+
+      return newCategory;
+    } else {
+      throw "Fail to update category";
+    }
+  }
 }
