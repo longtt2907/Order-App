@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:demo_12_03/screens/Order/Pay.dart';
+import 'package:demo_12_03/screens/Order/ProductDetail.dart';
 import "package:flutter/material.dart";
 import 'package:demo_12_03/constants.dart';
 import 'package:demo_12_03/models/bill_model.dart';
@@ -18,7 +19,7 @@ class ItemsOrder extends StatelessWidget {
   void buildPayPage(BuildContext context) {
     log('${bill}');
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => Pay(product: product, bill: bill),
+      builder: (context) => ProductDetail(product: product, bill: bill),
     ));
   }
 

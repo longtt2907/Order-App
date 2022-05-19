@@ -18,6 +18,7 @@ class RoundPrefixIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: EdgeInsets.all(10),
         width: 200,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
@@ -33,7 +34,8 @@ class RoundPrefixIconButton extends StatelessWidget {
             // ignore: prefer_const_constructors
             style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
+                overlayColor:
+                    MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100),

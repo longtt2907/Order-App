@@ -65,20 +65,16 @@ class _MultiSelectState extends State<MultiSelect> {
                       Text(
                         "${item.title}",
                         style: TextStyle(
-                            fontSize: size.width * 0.05,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
                             overflow: TextOverflow.ellipsis),
                       ),
-                      Text(
-                        "${item.prices[0].price}đ",
-                        style: TextStyle(
-                          fontSize: size.width * 0.05,
-                        ),
-                      ),
                     ]),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)),
-                controlAffinity: ListTileControlAffinity.leading,
-                tileColor: kPrimaryColor,
+                // shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(100)),
+                controlAffinity: ListTileControlAffinity.trailing,
+                // tileColor: kPrimaryColor,
                 selectedTileColor: kPrimaryColor,
                 activeColor: kPrimaryColor,
                 onChanged: (isChecked) => _itemChange(item, isChecked!),

@@ -1,3 +1,4 @@
+import 'package:demo_12_03/models/product_model.dart';
 import 'package:demo_12_03/screens/Order/OrderList.dart';
 import 'package:demo_12_03/constants.dart';
 import "package:flutter/material.dart";
@@ -44,9 +45,10 @@ class _BottomContainerState extends State<BottomContainer> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                    color: Colors.black.withOpacity(0.7),
-                    style: BorderStyle.solid,
-                    width: 0.8),
+                  color: Colors.black.withOpacity(0.7),
+                  width: 0.8,
+                  style: BorderStyle.solid,
+                ),
               ),
             ),
             width: double.infinity,
@@ -56,24 +58,20 @@ class _BottomContainerState extends State<BottomContainer> {
                 onTap: () => handleOpenBar()),
           ),
           openBar
+              ? Text("Sản phẩm",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+              : const SizedBox(height: 0),
+          openBar
               ? Container(
-                  height: 210,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Column(children: [
-                    Container(
-                        height: 30,
-                        width: double.infinity,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("trà gì đó",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 16)),
-                              Text("1"),
-                              Text("60000đ"),
-                            ]))
-                  ]),
+                  height: 180,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: ListView.separated(
+                      itemBuilder: (BuildContext context, int index) {
+                        return ItemList(product: widget.bill!.dishes[index]);
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(thickness: 1.0),
+                      itemCount: widget.bill!.dishes!.length),
                 )
               : const SizedBox(height: 0),
           ConfirmRow(
@@ -83,6 +81,37 @@ class _BottomContainerState extends State<BottomContainer> {
         ],
       ),
     );
+  }
+}
+
+class ItemList extends StatelessWidget {
+  const ItemList({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
+
+  final Dish product;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 30,
+        width: double.infinity,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Text("${product.dish.title}",
+                    style: TextStyle(color: Colors.black, fontSize: 18)),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: Text("${product.quantity}đ",
+                      style: TextStyle(color: Colors.black, fontSize: 18))),
+              Text("${product.totalPrice}",
+                  style: TextStyle(color: Colors.black, fontSize: 18)),
+            ]));
   }
 }
 
