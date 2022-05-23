@@ -6,6 +6,7 @@ import 'package:demo_12_03/screens/Order/Components/BottomBar/BottomBar.dart';
 import 'package:demo_12_03/screens/Order/Components/Sidebar/SidebarOrder.dart';
 import 'package:demo_12_03/constants.dart';
 import 'package:demo_12_03/models/product_model.dart';
+import 'package:demo_12_03/screens/Order/Components/Table.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:scroll_to_id/scroll_to_id.dart';
@@ -27,7 +28,16 @@ class _OrderState extends State<Order> {
   final ScrollController scrollController = ScrollController();
   late List<Product> products = [];
   late List<Category> categories = [];
+  int _selectedIndex = 0;
+  PageController pageController = PageController();
 
+  void onTapp(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    pageController.animateToPage(index,
+        duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+  }
   // void _scrollListener() {
   //   print(scrollToId.idPosition());
   // }
@@ -54,31 +64,48 @@ class _OrderState extends State<Order> {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: LabelText("Order", Colors.black),
-          centerTitle: false,
-          leading: BackButton(
-              color: Colors.black,
-              onPressed: () => {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => HomePage()))
-                  }),
-          backgroundColor: Colors.white,
-          elevation: 4,
-        ),
-        body: buildBody(size.height),
-        bottomSheet: widget.bill != null
-            ? BottomContainer(size: size, bill: widget.bill!)
-            : BottomContainer(
-                size: size,
-              ),
-      ),
+          appBar: AppBar(
+            title: LabelText("Order", Colors.black),
+            centerTitle: false,
+            leading: BackButton(
+                color: Colors.black,
+                onPressed: () => {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => HomePage()))
+                    }),
+            backgroundColor: Colors.white,
+            elevation: 4,
+          ),
+          bottomNavigationBar: widget.bill == null
+              ? BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home), label: "Table"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.food_bank), label: "Order")
+                  ],
+                  onTap: onTapp,
+                  selectedItemColor: kPrimaryColor,
+                  currentIndex: _selectedIndex,
+                )
+              : null,
+          body: PageView(
+            controller: pageController,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              buildBody(size.height),
+              TableOrder(),
+            ],
+          ),
+          bottomSheet: widget.bill != null
+              ? BottomContainer(size: size, bill: widget.bill!)
+              : null),
     );
   }
 
   Widget buildBody(double height) {
     return Container(
-      margin: EdgeInsets.only(bottom: 110),
+      margin: widget.bill != null ? EdgeInsets.only(bottom: 140) : null,
       child: FutureBuilder(
           future: CategoryService().getCategories(),
           builder:

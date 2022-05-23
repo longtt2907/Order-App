@@ -107,9 +107,9 @@ class ItemList extends StatelessWidget {
               ),
               Expanded(
                   flex: 1,
-                  child: Text("${product.quantity}đ",
+                  child: Text("${product.quantity}",
                       style: TextStyle(color: Colors.black, fontSize: 18))),
-              Text("${product.totalPrice}",
+              Text("${product.totalPrice}đ",
                   style: TextStyle(color: Colors.black, fontSize: 18)),
             ]));
   }

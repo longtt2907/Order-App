@@ -12,7 +12,6 @@ class ProductService {
 
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
-
       List<Product> products =
           body.map((dynamic item) => Product.fromJson(item)).toList();
       return products;
@@ -21,7 +20,6 @@ class ProductService {
     }
   }
 
-  
   Future<List<Product>> getProductsByCategoryId(String categoryId) async {
     Response res = await get(
       Uri.parse(productUrl + '/' + categoryId),
@@ -29,10 +27,23 @@ class ProductService {
 
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
-
       List<Product> products =
           body.map((dynamic item) => Product.fromJson(item)).toList();
       return products;
+    } else {
+      throw "Can't get products";
+    }
+  }
+
+  Future<Product> getProductById(String productId) async {
+    Response res = await get(
+      Uri.parse(productUrl + "/find/" + productId),
+    );
+
+    if (res.statusCode == 200) {
+      dynamic body = jsonDecode(res.body);
+      Product product = Product.fromJson(body) as Product;
+      return product;
     } else {
       throw "Can't get products";
     }

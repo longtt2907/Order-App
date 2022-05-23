@@ -35,7 +35,7 @@ class _ProductDetailState extends State<ProductDetail> {
       dish: widget.product,
       subDish: subDish,
       size: dishSize,
-      price: priceInfo,
+      // price: priceInfo,
       totalPrice: (priceDetail + priceInfo) * quantity,
       quantity: quantity,
       note: description,
@@ -115,7 +115,7 @@ class _ProductDetailState extends State<ProductDetail> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
-                            color: Colors.black38),
+                            color: Colors.black54),
                       ),
                     ),
                     // price & quantity
@@ -128,7 +128,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           Text(
                             priceInfo == 0
                                 ? "${widget.product.prices[0].price}đ"
-                                : "${priceInfo}",
+                                : "${priceInfo}đ",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 28,
@@ -145,13 +145,16 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     ),
                     const SizedBox(height: 15),
+                    //choose size
                     SizeContainer(
                         widget: widget,
                         onChanged: (item) {
                           priceInfo = item.price;
                           dishSize = item.title;
+                          setState(() {});
                         }),
                     const SizedBox(height: 15),
+                    //liên kết kho
                     widget.product.isLinked
                         ? Submenu(
                             product: widget.product,
@@ -163,6 +166,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                     priceDetail + item.prices[0].price as int;
                             })
                         : const SizedBox(height: 0),
+                    //ghi chú
                     Container(
                         alignment: Alignment.center,
                         padding: padding,
@@ -174,6 +178,9 @@ class _ProductDetailState extends State<ProductDetail> {
                         child: TextField(
                           cursorColor: kPrimaryColor,
                           decoration: InputDecoration(
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.red)),
+                            fillColor: kPrimaryColor,
                             focusColor: kPrimaryColor,
                             hintText: "Ghi chú",
                           ),

@@ -17,7 +17,6 @@ class ItemsOrder extends StatelessWidget {
   final Product product;
   final Bill? bill;
   void buildPayPage(BuildContext context) {
-    log('${bill}');
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ProductDetail(product: product, bill: bill),
     ));

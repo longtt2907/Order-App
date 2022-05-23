@@ -1,5 +1,11 @@
 import 'dart:developer';
 
+import 'package:demo_12_03/controllers/bill_controller.dart';
+import 'package:demo_12_03/controllers/category_controller.dart';
+import 'package:demo_12_03/controllers/product_controller.dart';
+import 'package:demo_12_03/models/bill_model.dart';
+import 'package:demo_12_03/models/category_model.dart';
+import 'package:demo_12_03/models/product_model.dart';
 import 'package:demo_12_03/screens/HomePage/Body/chart.dart';
 import 'package:demo_12_03/screens/HomePage/Body/dropDownList.dart';
 import 'package:demo_12_03/screens/HomePage/Sidebar/SideBar.dart';
@@ -18,9 +24,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String dateChoosed =
+      (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+  List<Bill> bills = [];
+  int doanhthu = 0;
   String _item = 'Ngày';
   String datetime =
       '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
+
+  void handleDate(DateTime date) {
+    dateChoosed = (date.millisecondsSinceEpoch ~/ 1000).toString();
+    log('${dateChoosed}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,16 +107,27 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Center(
-                child: Text(
-                  "1.000.000",
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              FutureBuilder(
+                  future: BillService().getBillsByDate(dateChoosed),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Bill>> snapshot) {
+                    if (snapshot.hasData) {
+                      bills = snapshot.data!;
+                      bills.map((bill) => {doanhthu = doanhthu + bill.total!});
+                      log('$doanhthu');
+                      return Center(
+                        child: Text(
+                          "${doanhthu}",
+                          style: TextStyle(
+                            color: textColor,
+                            fontSize: 42,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -129,6 +155,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Container(
                     padding: EdgeInsets.all(5),
+                    height: 50,
                     // decoration: BoxDecoration(
                     //   border: Border.all(
                     //       color: kPrimaryColor,
@@ -163,6 +190,7 @@ class _HomePageState extends State<HomePage> {
                                   datetime = "Năm ${result.year}";
                                   break;
                               }
+                              handleDate(result);
                             }
                           });
                         }),
@@ -176,81 +204,142 @@ class _HomePageState extends State<HomePage> {
 }
 
 SliverToBoxAdapter _buildBodyChart(double height) {
+  List<Product> products = [];
+  List<Category> categories = [];
+  List<Bill> bills = [];
   return SliverToBoxAdapter(
     child: Container(
-      height: height * 0.7,
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 35),
-      margin: EdgeInsets.symmetric(horizontal:20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        // boxShadow:,
-        // border: Border.all(
-        //     color: labelColor,
-        //     width: 0.5,
-        //     style: BorderStyle.solid),
-        // borderRadius: BorderRadius.circular(5),
+        height: height * 0.7,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          // boxShadow:,
+          // border: Border.all(
+          //     color: labelColor,
+          //     width: 0.5,
+          //     style: BorderStyle.solid),
+          // borderRadius: BorderRadius.circular(5),
         ),
-      
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconContainer(),
-              IconContainer(),
-              IconContainer(),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Divider(height: 1.0, thickness: 1.0, color: textColor),
-          const SizedBox(height: 20),
-          Expanded(
-            child: SizedBox(
-              height: height * 0.4,
-              child: TimeSeriesBar.withSampleData(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color(0xFFA2D2FF),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Doanh thu",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "1.000.000",
-                        style: TextStyle(fontSize: 17),
-                        textAlign: TextAlign.end,
-                      ),
-                    ],
-                  ),
-                ),
-                const Text("213125%", style: TextStyle(fontSize: 20))
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
+        child: FutureBuilder(
+            future: CategoryService().getCategories(),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+              if (snapshot.hasData) {
+                categories = snapshot.data!;
+
+                return FutureBuilder(
+                    future: ProductService().getProducts(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Product>> snapshot) {
+                      if (snapshot.hasData) {
+                        products = snapshot.data!;
+
+                        return FutureBuilder(
+                            future: ProductService().getProducts(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<Product>> snapshot) {
+                              if (snapshot.hasData) {
+                                products = snapshot.data!;
+
+                                return Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconContainer(
+                                          icon: Icons.category,
+                                          text: "${categories.length}",
+                                          color: Color(0xFF809A6F),
+                                        ),
+                                        IconContainer(
+                                          icon: Icons.food_bank,
+                                          text: "${products.length}",
+                                          color: Color(0xFFA25B5B),
+                                        ),
+                                        IconContainer(
+                                          icon: Icons.receipt,
+                                          text: "15",
+                                          color: Color(0xFFCC9C75),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Divider(
+                                        height: 1.0,
+                                        thickness: 1.0,
+                                        color: textColor),
+                                    const SizedBox(height: 20),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: height * 0.4,
+                                        child: TimeSeriesBar.withSampleData(),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      padding: EdgeInsets.all(15),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Color(0xFFA2D2FF),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Doanh thu",
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  "1.000.000",
+                                                  style:
+                                                      TextStyle(fontSize: 17),
+                                                  textAlign: TextAlign.end,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Text("213125%",
+                                              style: TextStyle(fontSize: 20))
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            });
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    });
+              }
+              return const Center(child: CircularProgressIndicator());
+            })),
   );
 }
 
 class IconContainer extends StatelessWidget {
   const IconContainer({
     Key? key,
+    required this.icon,
+    required this.text,
+    required this.color,
   }) : super(key: key);
+
+  final IconData icon;
+  final String text;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -259,12 +348,13 @@ class IconContainer extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Icon(Icons.people, color: labelColor),
-          const Text(
-            "15",
+          Icon(icon, color: color, size: 35),
+          const SizedBox(width: 10),
+          Text(
+            text,
             style: TextStyle(
               color: labelColor,
-              fontSize: 17,
+              fontSize: 20,
             ),
           ),
         ],
