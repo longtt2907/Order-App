@@ -40,8 +40,8 @@ class Bill {
 
 class Dish {
   final String? id;
-  final Product dish;
-  final List<Product>? subDish;
+  final dynamic dish;
+  final List<dynamic>? subDish;
   final String size;
   late int totalPrice;
   late int quantity;
@@ -57,17 +57,23 @@ class Dish {
     this.note,
   });
   factory Dish.fromJson(Map<String, dynamic> json) {
-    print("concac");
-    List<dynamic> bodyProducts = json['subDish'] as List<dynamic>;
-    String dishId = json['dish'] as String;
-    Future<Product> dish = ProductService().getProductById(dishId);
-    List<Future<Product>> subDish = bodyProducts
-        .map((dynamic item) => ProductService().getProductById(item as String))
-        .toList();
+    // List<dynamic> bodyProducts = json['subDish'] as List<dynamic>;
+    // String dishId = json['dish'] as String;
+    // Future<Product> dish = ProductService().getProductById(dishId);
+    // List<Future<Product>> subDish = bodyProducts
+    //     .map((dynamic item) => ProductService().getProductById(item as String))
+    //     .toList();
+    List<dynamic> bodyDish = json['subDish'];
+    List<Product> subDish =
+        bodyDish.map((dynamic item) => Product.fromJson(item)).toList();
+    // print(bodyDish);
+    // print(json['dish']);
+    // print(json['subDish']);
+    // print(subDish);
     return Dish(
       id: json['_id'] as String,
-      dish: dish as Product,
-      subDish: subDish as List<Product>,
+      dish: json['dish'],
+      subDish: subDish,
       size: json['size'] as String,
       totalPrice: json['totalPrice'] as int,
       quantity: json['quantity'] as int,

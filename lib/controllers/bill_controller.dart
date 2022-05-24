@@ -41,16 +41,14 @@ class BillService {
     }
   }
 
-  Future<List<Bill>> getBillsByDate(String timestamp) async {
+  Future<List<Bill>> getBillsByDate(String timestamp, String type) async {
     Response res = await get(
-      Uri.parse(billUrl + "/date" + "?t=" + timestamp),
+      Uri.parse(billUrl + "/date" + "?t=" + timestamp + "&type=" + type),
     );
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
-      print(body);
-      List<Bill> bills = [];
-      bills = body.map((dynamic item) => Bill.fromJson(item)).toList();
-      // print(bills);
+      List<Bill> bills =
+          body.map((dynamic item) => Bill.fromJson(item)).toList();
       return bills;
     } else {
       throw "Can't get bills";

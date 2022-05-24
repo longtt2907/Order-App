@@ -29,10 +29,12 @@ class _HomePageState extends State<HomePage> {
   List<Bill> bills = [];
   int doanhthu = 0;
   String _item = 'Ngày';
+  String typeChoosed = 'day';
   String datetime =
       '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
 
   void handleDate(DateTime date) {
+    doanhthu = 0;
     dateChoosed = (date.millisecondsSinceEpoch ~/ 1000).toString();
     log('${dateChoosed}');
   }
@@ -108,16 +110,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               FutureBuilder(
-                  future: BillService().getBillsByDate(dateChoosed),
+                  future:
+                      BillService().getBillsByDate(dateChoosed, typeChoosed),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Bill>> snapshot) {
                     if (snapshot.hasData) {
                       bills = snapshot.data!;
-                      bills.map((bill) => {doanhthu = doanhthu + bill.total!});
-                      log('$doanhthu');
+                      doanhthu = 0;
+                      print("concac");
+                      for (Bill bill in bills) {
+                        doanhthu = doanhthu + bill.total!;
+                      }
                       return Center(
                         child: Text(
-                          "${doanhthu}",
+                          "${numFormat.format(doanhthu)}đ",
                           style: TextStyle(
                             color: textColor,
                             fontSize: 42,
@@ -142,12 +148,15 @@ class _HomePageState extends State<HomePage> {
                           case 'Ngày':
                             datetime =
                                 "${result.day}/${result.month}/${result.year}";
+                            typeChoosed = 'day';
                             break;
                           case 'Tháng':
                             datetime = "Tháng ${result.month}";
+                            typeChoosed = 'month';
                             break;
                           case 'Năm':
                             datetime = "Năm ${result.year}";
+                            typeChoosed = 'year';
                             break;
                         }
                       },
@@ -176,8 +185,10 @@ class _HomePageState extends State<HomePage> {
                             firstDate: DateTime(2015),
                             lastDate: DateTime(2030),
                           );
-                          setState(() {
-                            if (result != null) {
+                          if (result != null) {
+                            handleDate(result);
+                            log('$result.day');
+                            setState(() {
                               switch (_item) {
                                 case 'Ngày':
                                   datetime =
@@ -190,9 +201,8 @@ class _HomePageState extends State<HomePage> {
                                   datetime = "Năm ${result.year}";
                                   break;
                               }
-                              handleDate(result);
-                            }
-                          });
+                            });
+                          }
                         }),
                   ),
                 ],
