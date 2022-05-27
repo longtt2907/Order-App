@@ -20,7 +20,6 @@ class ProductService {
       throw "Can't get products";
     }
   }
-
   
   Future<List<Product>> getProductsByCategoryId(String categoryId) async {
     Response res = await get(
