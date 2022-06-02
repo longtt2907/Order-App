@@ -4,11 +4,13 @@ import 'package:intl/intl.dart';
 const kPrimaryColor = Color(0xFFe67e22);
 const kPrimaryLightColor = Color.fromARGB(255, 236, 145, 59);
 const kPrimaryTextColor = Color.fromARGB(255, 201, 96, 5);
-const kBackgroundColor = Color.fromARGB(255, 202, 201, 201);
 const kSuccessColor = Color(0xFF16DD38);
 const kDangerColor = Colors.redAccent;
 const kWarningColor = Colors.orangeAccent;
 const BASE_URL = "http://192.168.1.72:5001";
+const kBlackColor = Color(0xFF383838);
+// const kBackgroundColor = Color.fromARGB(255, 173, 172, 172);
+const kBackgroundColor = Color(0xFF8C8C8C);
 var numFormat = NumberFormat('#,###,###');
 
 class LabelText extends StatelessWidget {

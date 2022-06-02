@@ -189,21 +189,22 @@ class _AddOptionMainState extends State<AddOptionMain> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text("Thêm món ăn"),
-          centerTitle: true,
-          leading: BackButton(onPressed: () {
-            Navigator.pop(context, danhmucSelected);
-          }),
-          backgroundColor: kPrimaryColor,
-          elevation: 4,
+          title: Text("Thêm món ăn", style: TextStyle(color: kBlackColor)),
+          leading: BackButton(
+              color: kBlackColor,
+              onPressed: () {
+                Navigator.pop(context, danhmucSelected);
+              }),
+          backgroundColor: Colors.white,
+          elevation: 2,
         ),
         floatingActionButton: FloatingActionButton(
-                            onPressed: () {
-                              openDialog(context);
-                            },
-                            backgroundColor: kPrimaryColor,
-                            child: Icon(Icons.add),
-                          ),
+          onPressed: () {
+            openDialog(context);
+          },
+          backgroundColor: kPrimaryColor,
+          child: Icon(Icons.add),
+        ),
         body: FutureBuilder(
             future: categoryService.getCategories(),
             builder:

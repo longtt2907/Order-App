@@ -1,6 +1,7 @@
 import 'package:demo_12_03/components/round_prefix_icon_button.dart';
 import 'package:demo_12_03/constants.dart';
 import 'package:demo_12_03/models/bill_model.dart';
+import 'package:demo_12_03/screens/Order/OrderList.dart';
 import 'package:flutter/material.dart';
 
 class TabWidget extends StatelessWidget {
@@ -14,15 +15,20 @@ class TabWidget extends StatelessWidget {
     // required this.onPressed
   }) : super(key: key);
 
+  void _buildPageOrderList(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => OrderList(bill: bill!)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
         padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
         controller: scrollController,
-        children: [_topWidget(), _contentWidget()]);
+        children: [_topWidget(context), _contentWidget()]);
   }
 
-  Widget _topWidget() {
+  Widget _topWidget(context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("${numFormat.format(bill!.totalPrice)}đ",
@@ -34,7 +40,7 @@ class TabWidget extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w600))
       ]),
       RoundPrefixIconButton(
-          press: () {},
+          press: () => _buildPageOrderList(context),
           text: "Giỏ hàng",
           icon: Icon(Icons.shopping_bag_outlined, color: kPrimaryColor),
           color: kPrimaryColor,

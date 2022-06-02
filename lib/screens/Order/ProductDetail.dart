@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:demo_12_03/components/multi_select.dart';
 import 'package:demo_12_03/components/round_prefix_icon_button.dart';
 import 'package:demo_12_03/constants.dart';
 import 'package:demo_12_03/controllers/product_controller.dart';
@@ -7,6 +8,7 @@ import 'package:demo_12_03/models/bill_model.dart';
 import 'package:demo_12_03/models/product_model.dart';
 import 'package:demo_12_03/screens/AddOption_tamthoi/ChooseList.dart';
 import 'package:demo_12_03/screens/Order/Order.dart';
+import 'package:demo_12_03/screens/Order/OrderList.dart';
 import "package:flutter/material.dart";
 
 class ProductDetail extends StatefulWidget {
@@ -24,8 +26,8 @@ class _ProductDetailState extends State<ProductDetail> {
   late int price = 0;
   late String description = "";
   late int priceDetail = 0;
-  late int priceInfo = 0;
-  late String dishSize;
+  late int priceInfo = widget.product.prices[0].price;
+  late String dishSize = widget.product.prices[0].title;
   late int quantity = 1;
   late List<Product> subDish = [];
   // late String priceChoosed = '';
@@ -50,6 +52,7 @@ class _ProductDetailState extends State<ProductDetail> {
         dishes: [newDish],
         total: newDish.quantity,
         totalPrice: newDish.totalPrice,
+        status: true,
       );
       widget.bill = newBill;
     }
@@ -66,151 +69,208 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     const padding = EdgeInsets.symmetric(horizontal: 15);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Pay",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            fontSize: 22,
+    return MaterialApp(
+      title: 'App Order',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          fontFamily: "Roboto",
+          primaryColor: kPrimaryColor,
+          scaffoldBackgroundColor: Colors.white,
+          backgroundColor: Colors.white),
+      home: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: Text(
+            "",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kBlackColor,
+              fontSize: 22,
+            ),
           ),
+          elevation: 0,
+          centerTitle: false,
+          leading: BackButton(
+              color: kBlackColor, onPressed: () => {Navigator.pop(context)}),
+          backgroundColor: Colors.transparent,
+          // elevation: 4,
         ),
-        centerTitle: false,
-        leading: BackButton(
-            color: Colors.black, onPressed: () => {Navigator.pop(context)}),
-        backgroundColor: Colors.white,
-        elevation: 4,
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        // padding: EdgeInsets.all(15),
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // picture
-                    Ink(
-                      height: 400,
-                      width: double.infinity,
-                      padding: padding,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        image: DecorationImage(
-                          image: NetworkImage(widget.product.image[0]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    //title food
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      width: double.infinity,
-                      padding: padding,
-                      child: Text(
-                        "${widget.product.title}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.black54),
-                      ),
-                    ),
-                    // price & quantity
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: padding,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            priceInfo == 0
-                                ? "${widget.product.prices[0].price}đ"
-                                : "${priceInfo}đ",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 28,
-                                color: kPrimaryColor.withOpacity(0.8)),
-                          ),
-                          Quantity(onChanged: (index) {
-                            // setState(() {
-                            //   quantity = index;
-                            // });
-                            quantity = index;
-                          }),
-                          //size
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    //choose size
-                    SizeContainer(
-                        widget: widget,
-                        onChanged: (item) {
-                          priceInfo = item.price;
-                          dishSize = item.title;
-                          setState(() {});
-                        }),
-                    const SizedBox(height: 15),
-                    //liên kết kho
-                    widget.product.isLinked
-                        ? Submenu(
-                            product: widget.product,
-                            onChanged: (items) {
-                              priceDetail = 0;
-                              subDish = items;
-                              for (var item in items)
-                                priceDetail =
-                                    priceDetail + item.prices[0].price as int;
-                            })
-                        : const SizedBox(height: 0),
-                    //ghi chú
-                    Container(
-                        alignment: Alignment.center,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          // padding: EdgeInsets.all(15),
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // picture
+                      Ink(
+                        height: 350,
+                        width: double.infinity,
                         padding: padding,
-                        // margin:
-                        //     EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: TextField(
-                          cursorColor: kPrimaryColor,
-                          decoration: InputDecoration(
-                            enabledBorder: new UnderlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.red)),
-                            fillColor: kPrimaryColor,
-                            focusColor: kPrimaryColor,
-                            hintText: "Ghi chú",
+                          color: Colors.transparent,
+                          image: DecorationImage(
+                            image: NetworkImage(widget.product.image[0]),
+                            fit: BoxFit.contain,
                           ),
-                          onChanged: (val) {
-                            description = val;
-                          },
-                          maxLines: 1,
-                        )),
-                  ],
+                        ),
+                      ),
+                      //title food
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        width: double.infinity,
+                        padding: EdgeInsets.all(15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${widget.product.title}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 28,
+                                    color: kBlackColor)),
+                            Text(
+                              priceInfo == 0
+                                  ? "${numFormat.format(widget.product.prices[0].price)}đ"
+                                  : "${numFormat.format(priceInfo)}đ",
+                              style: TextStyle(
+                                  fontFamily: "Lato",
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 22,
+                                  color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // price & quantity
+                      // Container(
+                      //   alignment: Alignment.centerLeft,
+                      //   padding: padding,
+                      //   child: Text(
+                      //     priceInfo == 0
+                      //         ? "${numFormat.format(widget.product.prices[0].price)}đ"
+                      //         : "${numFormat.format(priceInfo)}đ",
+                      //     style: TextStyle(
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize: 20,
+                      //         color: Colors.black45),
+                      //   ),
+                      // ),
+                      //choose size
+                      SizeContainer(
+                          widget: widget,
+                          onChanged: (item) {
+                            priceInfo = item.price;
+                            dishSize = item.title;
+                            setState(() {});
+                          }),
+                      const SizedBox(height: 15),
+                      //liên kết kho
+                      widget.product.isLinked
+                          ? Submenu(
+                              product: widget.product,
+                              onChanged: (items) {
+                                priceDetail = 0;
+                                subDish = items;
+                                for (var item in items)
+                                  priceDetail =
+                                      priceDetail + item.prices[0].price as int;
+                              })
+                          : const SizedBox(height: 0),
+                      //ghi chú
+                      Container(
+                          alignment: Alignment.center,
+                          padding: padding,
+                          // margin:
+                          //     EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextField(
+                            cursorColor: kPrimaryColor,
+                            decoration: InputDecoration(
+                              fillColor: Color(0xFF0F4C75),
+                              focusColor: Color(0xFF0F4C75),
+                              hoverColor: Color(0xFF0F4C75),
+                              hintText: "Ghi chú",
+                            ),
+                            onChanged: (val) {
+                              description = val;
+                            },
+                            maxLines: 1,
+                          )),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 40),
+              const SizedBox(height: 100),
+              // RoundPrefixIconButton(
+              //     text: 'Xác nhận',
+              //     icon: Icon(Icons.check, color: kPrimaryColor),
+              //     color: kPrimaryColor,
+              //     textColor: Colors.white,
+              //     press: () {
+              //       handleSubmit();
+              //     }),
+              // const SizedBox(height: 15),
+            ],
+          ),
+        ),
+        bottomSheet: Container(
+          // height: size.height * 0.25,
+          alignment: Alignment.center,
+          height: 90,
+          color: Colors.white,
+          child: Column(children: [
             Container(
-              margin: EdgeInsets.only(
-                          left: 10, right: 10, top: 10, bottom: 20),
-                      width: size.width * 0.6,
-                      height: 50,
-              child: RoundPrefixIconButton(
-                  text: 'Xác nhận',
-                  icon: Icon(Icons.check, color: kPrimaryColor),
-                  color: kPrimaryColor,
-                  textColor: Colors.white,
-                  press: () {
-                    handleSubmit();
-                  }),
-            ),
-            const SizedBox(height: 15),
-          ],
+                height: 90,
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Expanded(
+                    //   flex: 2,
+                    //   child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         Text("Tổng tiền",
+                    //             style: TextStyle(
+                    //                 fontSize: 20, color: kBackgroundColor)),
+                    //         Text(
+                    //             "${numFormat.format((priceInfo + priceDetail) * quantity)}đ",
+                    //             style: TextStyle(
+                    //                 fontSize: 30, fontWeight: FontWeight.bold))
+                    //       ]),
+                    // ),
+                    Expanded(
+                      flex: 2,
+                      child: Quantity(onChanged: (index) {
+                        // setState(() {
+                        //   quantity = index;
+                        // });
+                        quantity = index;
+                      }),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: OrderListButton(
+                        title: "THANH TOÁN",
+                        // color: Color(0xFF343A40),
+                        color: kBlackColor,
+                        icon: Icons.shopping_basket_outlined,
+                        onPressed: () => {
+                          handleSubmit(),
+                        },
+                      ),
+                    ),
+                  ],
+                ))
+          ]),
         ),
       ),
     );
@@ -232,15 +292,23 @@ class SizeContainer extends StatefulWidget {
 }
 
 class _SizeContainerState extends State<SizeContainer> {
-  String priceChoosed = "";
+  String priceChoosed = '';
+
+  @override
+  void initState() {
+    priceChoosed = widget.widget.product.prices[0].title;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: kPrimaryColor.withOpacity(0.8),
-      ),
+          // color: Colors.black.withOpacity(0.8),
+          color: Color(0xFF0F4C75)),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: widget.widget.product.prices
             .map((price) => SizeItem(
                 size: price.title,
@@ -288,7 +356,7 @@ class _SubmenuState extends State<Submenu> {
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
-                  color: Colors.black54),
+                  color: kBlackColor),
             ),
           ),
           FutureBuilder(
@@ -299,7 +367,7 @@ class _SubmenuState extends State<Submenu> {
               if (snapshot.hasData) {
                 items = snapshot.data!;
                 return Center(
-                  child: MultiSelect(
+                  child: MultiSelected(
                     items: items,
                     selectedItems: itemsSelected,
                     onChanged: (val) {
@@ -332,27 +400,28 @@ class SizeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
-        margin: EdgeInsets.only(right: 10),
+        margin: EdgeInsets.only(right: 10, left: 10),
         width: 50,
         height: 50,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.white,
-            width: 2.0,
+            color: choosen != false ? Colors.white : Colors.white54,
+            width: 1.0,
             style: BorderStyle.solid,
           ),
           borderRadius: BorderRadius.circular(10),
-          color:
-              choosen != false ? Colors.white : kPrimaryColor.withOpacity(0.7),
+          color: choosen != false
+              ? Color.fromARGB(255, 75, 112, 137)
+              : Color(0xFF0F4C75),
         ),
+        // /Color(0xFF064663)
         child: Text("${size}",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: choosen != false
-                  ? kPrimaryColor.withOpacity(0.7)
-                  : Colors.white,
+              color: Colors.white,
             )),
       ),
       onTap: () => onChanged(),
@@ -390,23 +459,21 @@ class _QuantityState extends State<Quantity> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         TextButton(
           style: TextButton.styleFrom(
               shape: CircleBorder(
                 side: BorderSide(
                   width: 1.5,
-                  color: kPrimaryColor.withOpacity(0.8),
+                  color: kBlackColor,
                 ),
               ),
               backgroundColor: Colors.transparent,
               alignment: Alignment.center,
               fixedSize: const Size(35, 35)),
-          child: Text("-",
-              style: TextStyle(
-                  color: kPrimaryColor.withOpacity(0.8), fontSize: 20)),
+          child: Icon(Icons.remove_outlined, color: Colors.black),
           onPressed: () => subtract(),
         ),
         Container(
@@ -426,16 +493,10 @@ class _QuantityState extends State<Quantity> {
           style: TextButton.styleFrom(
               padding: EdgeInsets.all(0),
               shape: const CircleBorder(),
-              backgroundColor: kPrimaryColor.withOpacity(0.8),
+              backgroundColor: kBlackColor,
               alignment: Alignment.center,
               fixedSize: const Size(35, 35)),
-          child: Center(
-              child: Text("+",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ))),
+          child: Center(child: Icon(Icons.add_outlined, color: Colors.white)),
           onPressed: () => add(),
         ),
       ],

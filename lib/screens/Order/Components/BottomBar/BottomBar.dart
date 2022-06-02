@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:demo_12_03/models/product_model.dart';
 import 'package:demo_12_03/screens/Order/OrderList.dart';
 import 'package:demo_12_03/constants.dart';
@@ -19,14 +21,19 @@ class BottomContainer extends StatefulWidget {
 
 class _BottomContainerState extends State<BottomContainer> {
   bool openBar = false;
+  double height = 30;
 
   void handleOpenBar() {
-    setState(() {
-      openBar = !openBar;
-    });
+    openBar = !openBar;
+    Timer(
+        Duration(milliseconds: 100),
+        () => setState(() {
+              openBar ? height = 240 : height = 30;
+            }));
   }
 
   void buildPageOrderList(BuildContext context) {
+    print("1234");
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => OrderList(bill: widget.bill!)));
   }
@@ -34,49 +41,72 @@ class _BottomContainerState extends State<BottomContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // duration: Duration(milliseconds: 200),
+      // curve: Curves.ease,
       width: double.infinity,
-      height: openBar ? 350 : 140,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black.withOpacity(0.7),
-                  width: 0.8,
-                  style: BorderStyle.solid,
+      // height: height,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.linear,
+              height: height,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black.withOpacity(0.7),
+                            width: 0.8,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      width: double.infinity,
+                      height: 30,
+                      child: GestureDetector(
+                          child: Icon(Icons.arrow_drop_up_rounded),
+                          onTap: () => handleOpenBar()),
+                    ),
+                    openBar
+                        ? Text("Sản phẩm",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20))
+                        : const SizedBox(height: 0),
+                    openBar
+                        ? AnimatedSize(
+                            duration: Duration(milliseconds: 300),
+                            child: Container(
+                              height: openBar ? 180 : 0,
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: ListView.separated(
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ItemList(
+                                        product: widget.bill!.dishes[index]);
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          const Divider(thickness: 1.0),
+                                  itemCount: widget.bill!.dishes.length),
+                            ),
+                          )
+                        : const SizedBox(height: 0),
+                  ],
                 ),
               ),
             ),
-            width: double.infinity,
-            height: 30,
-            child: GestureDetector(
-                child: Icon(Icons.arrow_drop_up_rounded),
-                onTap: () => handleOpenBar()),
-          ),
-          openBar
-              ? Text("Sản phẩm",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-              : const SizedBox(height: 0),
-          openBar
-              ? Container(
-                  height: 180,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: ListView.separated(
-                      itemBuilder: (BuildContext context, int index) {
-                        return ItemList(product: widget.bill!.dishes[index]);
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const Divider(thickness: 1.0),
-                      itemCount: widget.bill!.dishes.length),
-                )
-              : const SizedBox(height: 0),
-          // ConfirmRow(
-          //     bill: widget.bill,
-          //     // size: widget.size,
-          //     onPressed: () => buildPageOrderList(context))
-        ],
+            // ConfirmRow(
+            //     bill: widget.bill,
+            //     size: widget.size,
+            //     onPressed: () => buildPageOrderList(context))
+          ],
+        ),
       ),
     );
   }

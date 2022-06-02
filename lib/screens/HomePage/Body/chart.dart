@@ -1,5 +1,7 @@
 /// Example of a time series chart using a bar renderer.
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:demo_12_03/controllers/bill_controller.dart';
+import 'package:demo_12_03/models/bill_model.dart';
 import 'package:flutter/material.dart';
 
 class TimeSeriesBar extends StatelessWidget {
@@ -15,6 +17,30 @@ class TimeSeriesBar extends StatelessWidget {
       // Disable animations for image tests.
       animate: false,
     );
+  }
+  factory TimeSeriesBar.withData(List<int> data){
+      return new TimeSeriesBar(
+        _createData(data),
+      // Disable animations for image tests.
+      animate: false,
+    );
+  }
+  
+   static List<charts.Series<TimeSeriesSales, DateTime>> _createData(List<int> dataDoanhthu) {
+    List<TimeSeriesSales> data=[];
+    for(int i=1;i<=12;i++){
+      DateTime dt = new DateTime.now();
+      data.add(new TimeSeriesSales(new DateTime(dt.year,i,1), dataDoanhthu[i-1]));
+    }
+    return [
+      new charts.Series<TimeSeriesSales, DateTime>(
+        id: 'Sales',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (TimeSeriesSales sales, _) => sales.time,
+        measureFn: (TimeSeriesSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
   }
 
   @override

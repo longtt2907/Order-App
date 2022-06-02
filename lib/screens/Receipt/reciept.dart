@@ -54,13 +54,14 @@ class _ReceiptManageState extends State<ReceiptManage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Hóa Đơn"),
-          centerTitle: true,
-          leading: BackButton(onPressed: () {
-            Navigator.pop(context);
-          }),
-          backgroundColor: kPrimaryColor,
-          elevation: 4,
+          title: Text("Hóa đơn", style: TextStyle(color: kBlackColor)),
+          leading: BackButton(
+              color: kBlackColor,
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          backgroundColor: Colors.white,
+          elevation: 2,
         ),
         body: Container(
           padding: const EdgeInsets.all(6),

@@ -55,6 +55,7 @@ dev_dependencies:
   uuid: ^3.0.6
   cloudinary_public: ^0.11.0
   fluttertoast: ^8.0.8
+  oktoast: ^3.1.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +74,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/login.svg
+    - assets/images/logo-momo-png-2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -103,6 +105,42 @@ flutter:
         - asset: assets/fonts/montserrat/Montserrat-ExtraBold.ttf
           weight: 800
         - asset: assets/fonts/montserrat/Montserrat-Black.ttf
+          weight: 900
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/lato/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/lato/Lato-Regular.ttf
+          weight: 400
+        # - asset: assets/fonts/lato/Lato-Medium.ttf
+        #   weight: 500
+        # - asset: assets/fonts/lato/Lato-BoldItalic.ttf
+        #   weight: 600
+        - asset: assets/fonts/lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/lato/Lato-BlackItalic.ttf
+          weight: 800
+        - asset: assets/fonts/lato/Lato-Black.ttf
+          weight: 900
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/roboto/Roboto-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/roboto/Roboto-Light.ttf
+          weight: 300
+        - asset: assets/fonts/roboto/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/roboto/Roboto-Medium.ttf
+          weight: 500
+        # - asset: assets/fonts/roboto/Roboto-BoldItalic.ttf
+        #   weight: 600
+        - asset: assets/fonts/roboto/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/roboto/Roboto-BlackItalic.ttf
+          weight: 800
+        - asset: assets/fonts/roboto/Roboto-Black.ttf
           weight: 900
   #   - family: Trajan Pro
   #     fonts:

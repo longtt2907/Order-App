@@ -2,15 +2,12 @@ import 'dart:developer';
 
 import 'package:demo_12_03/screens/HomePage/HomePage.dart';
 import 'package:demo_12_03/screens/Order/Components/Body/ItemsOrder.dart';
-import 'package:demo_12_03/screens/Order/Components/BottomBar/BottomBar.dart';
-import 'package:demo_12_03/screens/Order/Components/Sidebar/SidebarOrder.dart';
 import 'package:demo_12_03/constants.dart';
 import 'package:demo_12_03/models/product_model.dart';
 import 'package:demo_12_03/screens/Order/Components/Table.dart';
 import 'package:demo_12_03/screens/Order/Components/tab_widget.dart';
 import 'package:demo_12_03/screens/Order/ProductDetail.dart';
 import 'package:flutter/material.dart';
-import 'package:momo_vn/momo_vn.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:scroll_to_id/scroll_to_id.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -19,7 +16,6 @@ import '../../controllers/category_controller.dart';
 import '../../controllers/product_controller.dart';
 import '../../models/bill_model.dart';
 import '../../models/category_model.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: must_be_immutable
 class Order extends StatefulWidget {
@@ -38,10 +34,6 @@ class _OrderState extends State<Order> {
   // int _selectedIndex = 0;
   String selectedCategory = "";
 
-  late MomoVn _momoPay;
-  late PaymentResponse _momoPaymentResult;
-  late String _paymentStatus;
-
   // void onTapp(int index) {
   //   setState(() {
   //     _selectedIndex = index;
@@ -53,10 +45,6 @@ class _OrderState extends State<Order> {
   @override
   void initState() {
     super.initState();
-    _momoPay = MomoVn();
-    _momoPay.on(MomoVn.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    initPlatformState();
 
     /// Create ScrollToId instance
     scrollToId = ScrollToId(scrollController: scrollController);
@@ -70,76 +58,6 @@ class _OrderState extends State<Order> {
         duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
-  Future<void> initPlatformState() async {
-    if (!mounted) return;
-    setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _momoPay.clear();
-  }
-
-  void _setState() {
-    _paymentStatus = 'Đã chuyển thanh toán';
-    if (_momoPaymentResult.isSuccess == true) {
-      _paymentStatus += "\nTình trạng: Thành công.";
-      _paymentStatus +=
-          "\nSố điện thoại: " + _momoPaymentResult.phoneNumber.toString();
-      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra!;
-      _paymentStatus += "\nToken: " + _momoPaymentResult.token.toString();
-    } else {
-      _paymentStatus += "\nTình trạng: Thất bại.";
-      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra.toString();
-      _paymentStatus += "\nMã lỗi: " + _momoPaymentResult.status.toString();
-    }
-  }
-
-  void _handlePaymentSuccess(PaymentResponse response) {
-    setState(() {
-      _momoPaymentResult = response;
-      _setState();
-    });
-    Fluttertoast.showToast(
-        msg: "THÀNH CÔNG: " + response.phoneNumber.toString(),
-        toastLength: Toast.LENGTH_SHORT);
-  }
-
-  void _handlePaymentError(PaymentResponse response) {
-    setState(() {
-      _momoPaymentResult = response;
-      _setState();
-    });
-    Fluttertoast.showToast(
-        msg: "THẤT BẠI: " + response.message.toString(),
-        toastLength: Toast.LENGTH_SHORT);
-  }
-
-  _handlePayment() async {
-    print("đã vô");
-    MomoPaymentInfo options = MomoPaymentInfo(
-        merchantName: "Photoos Social Media",
-        appScheme: "MOMONITG20220505",
-        merchantCode: 'MOMONITG20220505',
-        partnerCode: 'MOMONITG20220505',
-        amount: int.parse(20000.toString()),
-        orderId: 'ORD' + DateTime.now().millisecondsSinceEpoch.toString(),
-        orderLabel: 'MGD',
-        merchantNameLabel: "ABGD",
-        fee: 0,
-        description: 'Thanh toán hóa đơn',
-        username: 'vuongquocvinh.bh@gmail.com',
-        partner: 'merchant',
-        extra: "",
-        isTestMode: true);
-    try {
-      _momoPay.open(options);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -147,28 +65,15 @@ class _OrderState extends State<Order> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: LabelText("Order", Colors.black54),
+          title: LabelText("Order", kBlackColor),
           centerTitle: false,
           leading: BackButton(
-              color: Colors.black,
+              color: kBlackColor,
               onPressed: () => {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => HomePage()))
                   }),
         ),
-        // bottomNavigationBar: widget.bill == null
-        //     ? BottomNavigationBar(
-        //         items: const <BottomNavigationBarItem>[
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.home), label: "Table"),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.food_bank), label: "Order")
-        //         ],
-        //         onTap: onTapp,
-        //         selectedItemColor: kPrimaryColor,
-        //         currentIndex: _selectedIndex,
-        //       )
-        //     : null,
         body: widget.bill != null
             ? SlidingUpPanel(
                 minHeight: 86,
@@ -264,18 +169,6 @@ class _OrderState extends State<Order> {
                                   showListFood()
                                 ]),
                           );
-                          // Row(children: [
-                          //   SideBarOrder(
-                          //       scrollToId: scrollToId, categories: categories),
-                          //   Expanded(
-                          //     child: MainBody(
-                          //       scrollToId: scrollToId,
-                          //       products: products,
-                          //       categories: categories,
-                          //       bill: widget.bill,
-                          //     ),
-                          //   )
-                          // ]);
                         }
 
                         return const Center(child: CircularProgressIndicator());
@@ -388,7 +281,6 @@ class _OrderState extends State<Order> {
                 borderRadius: BorderRadius.circular(20))),
           ),
           onPressed: () {
-            print("123124");
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) =>
                   ProductDetail(product: product, bill: widget.bill),

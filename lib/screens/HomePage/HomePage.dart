@@ -6,10 +6,13 @@ import 'package:demo_12_03/controllers/product_controller.dart';
 import 'package:demo_12_03/models/bill_model.dart';
 import 'package:demo_12_03/models/category_model.dart';
 import 'package:demo_12_03/models/product_model.dart';
+import 'package:demo_12_03/screens/Food_Screen/food_screen.dart';
 import 'package:demo_12_03/screens/HomePage/Body/chart.dart';
 import 'package:demo_12_03/screens/HomePage/Body/dropDownList.dart';
 import 'package:demo_12_03/screens/HomePage/Sidebar/SideBar.dart';
 import 'package:demo_12_03/constants.dart';
+import 'package:demo_12_03/screens/Order/Order.dart';
+import 'package:demo_12_03/screens/Receipt/reciept.dart';
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
 
@@ -30,13 +33,21 @@ class _HomePageState extends State<HomePage> {
   int doanhthu = 0;
   String _item = 'Ngày';
   String typeChoosed = 'day';
+  String datetimeDiff =
+      (DateTime.now().subtract(Duration(hours: 24)).millisecondsSinceEpoch ~/
+              1000)
+          .toString();
   String datetime =
       '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
 
   void handleDate(DateTime date) {
     doanhthu = 0;
-    dateChoosed = (date.millisecondsSinceEpoch ~/ 1000).toString();
-    log('${dateChoosed}');
+    dateChoosed = (date.add(Duration(hours: 12)).millisecondsSinceEpoch ~/ 1000)
+        .toString();
+    datetimeDiff =
+        (DateTime.now().subtract(Duration(hours: 12)).millisecondsSinceEpoch ~/
+                1000)
+            .toString();
   }
 
   @override
@@ -118,7 +129,9 @@ class _HomePageState extends State<HomePage> {
                       bills = snapshot.data!;
                       doanhthu = 0;
                       for (Bill bill in bills) {
-                        doanhthu = doanhthu + bill.total!;
+                        if (bill.status == true) {
+                          doanhthu = doanhthu + bill.total!;
+                        }
                       }
                       return Center(
                         child: Text(
@@ -186,7 +199,6 @@ class _HomePageState extends State<HomePage> {
                           );
                           if (result != null) {
                             handleDate(result);
-                            log('${result}');
                             setState(() {
                               switch (_item) {
                                 case 'Ngày':
@@ -210,132 +222,176 @@ class _HomePageState extends State<HomePage> {
           )),
     );
   }
-}
 
-SliverToBoxAdapter _buildBodyChart(double height) {
-  List<Product> products = [];
-  List<Category> categories = [];
-  List<Bill> bills = [];
-  return SliverToBoxAdapter(
-    child: Container(
-        height: height * 0.7,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          // boxShadow:,
-          // border: Border.all(
-          //     color: labelColor,
-          //     width: 0.5,
-          //     style: BorderStyle.solid),
-          // borderRadius: BorderRadius.circular(5),
-        ),
-        child: FutureBuilder(
-            future: CategoryService().getCategories(),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
-              if (snapshot.hasData) {
-                categories = snapshot.data!;
+  SliverToBoxAdapter _buildBodyChart(double height) {
+    List<Product> products = [];
+    List<Category> categories = [];
+    List<Bill> bills = [];
+    return SliverToBoxAdapter(
+      child: Container(
+          height: height * 0.7,
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            // boxShadow:,
+            // border: Border.all(
+            //     color: labelColor,
+            //     width: 0.5,
+            //     style: BorderStyle.solid),
+            // borderRadius: BorderRadius.circular(5),
+          ),
+          child: FutureBuilder(
+              future: CategoryService().getCategories(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Category>> snapshot) {
+                if (snapshot.hasData) {
+                  categories = snapshot.data!;
 
-                return FutureBuilder(
-                    future: ProductService().getProducts(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<Product>> snapshot) {
-                      if (snapshot.hasData) {
-                        products = snapshot.data!;
+                  return FutureBuilder(
+                      future: ProductService().getProducts(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Product>> snapshot) {
+                        if (snapshot.hasData) {
+                          products = snapshot.data!;
 
-                        return FutureBuilder(
-                            future: ProductService().getProducts(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<List<Product>> snapshot) {
-                              if (snapshot.hasData) {
-                                products = snapshot.data!;
+                          return FutureBuilder(
+                              future: BillService().getBills(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<Bill>> snapshot) {
+                                if (snapshot.hasData) {
+                                  bills = snapshot.data!;
 
-                                return Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        IconContainer(
-                                          icon: Icons.category,
-                                          text: "${categories.length}",
-                                          color: Color(0xFF809A6F),
-                                        ),
-                                        IconContainer(
-                                          icon: Icons.food_bank,
-                                          text: "${products.length}",
-                                          color: Color(0xFFA25B5B),
-                                        ),
-                                        IconContainer(
-                                          icon: Icons.receipt,
-                                          text: "15",
-                                          color: Color(0xFFCC9C75),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Divider(
-                                        height: 1.0,
-                                        thickness: 1.0,
-                                        color: textColor),
-                                    const SizedBox(height: 20),
-                                    Expanded(
-                                      child: SizedBox(
-                                        height: height * 0.4,
-                                        child: TimeSeriesBar.withSampleData(),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Container(
-                                      padding: EdgeInsets.all(15),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Color(0xFFA2D2FF),
-                                      ),
-                                      child: Row(
+                                  return Column(
+                                    children: [
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Doanh thu",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  "1.000.000",
-                                                  style:
-                                                      TextStyle(fontSize: 17),
-                                                  textAlign: TextAlign.end,
-                                                ),
-                                              ],
-                                            ),
+                                          IconContainer(
+                                            icon: Icons.category,
+                                            text: "${categories.length}",
+                                            color: Color(0xFF809A6F),
                                           ),
-                                          const Text("213125%",
-                                              style: TextStyle(fontSize: 20))
+                                          IconContainer(
+                                            icon: Icons.food_bank,
+                                            text: "${products.length}",
+                                            color: Color(0xFFA25B5B),
+                                          ),
+                                          IconContainer(
+                                            icon: Icons.receipt,
+                                            text: "${bills.length}",
+                                            color: Color(0xFFCC9C75),
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                );
-                              }
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            });
-                      }
-                      return const Center(child: CircularProgressIndicator());
-                    });
-              }
-              return const Center(child: CircularProgressIndicator());
-            })),
-  );
+                                      const SizedBox(height: 20),
+                                      Divider(
+                                          height: 1.0,
+                                          thickness: 1.0,
+                                          color: textColor),
+                                      const SizedBox(height: 20),
+                                      FutureBuilder(
+                                          future: BillService()
+                                              .getBillsEveryMonth(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<List<int>>
+                                                  snapshot) {
+                                            if (snapshot.hasData) {
+                                              List<int> data = snapshot.data!;
+
+                                              return Expanded(
+                                                child: SizedBox(
+                                                  height: height * 0.4,
+                                                  child: TimeSeriesBar.withData(
+                                                      data),
+                                                ),
+                                              );
+                                            }
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Color(0xFFA2D2FF),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "DOANH THU",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    "${numFormat.format(doanhthu)}đ",
+                                                    style:
+                                                        TextStyle(fontSize: 17),
+                                                    textAlign: TextAlign.end,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            FutureBuilder(
+                                                future: BillService()
+                                                    .getBillsByDate(
+                                                        datetimeDiff, "day"),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<List<Bill>>
+                                                        snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    int doanhthuCompare = 0;
+                                                    List<Bill> data =
+                                                        snapshot.data!;
+                                                    for (Bill bill in data) {
+                                                      if (bill.status == true) {
+                                                        doanhthuCompare =
+                                                            doanhthuCompare +
+                                                                bill.total!;
+                                                      }
+                                                    }
+                                                    if (doanhthuCompare == 0) {
+                                                      doanhthuCompare = 100000;
+                                                    }
+                                                    return Text(
+                                                        "${((doanhthu / doanhthuCompare) * 100).toStringAsFixed(2)}%",
+                                                        style: TextStyle(
+                                                            fontSize: 20));
+                                                  }
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                })
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              });
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      });
+                }
+                return const Center(child: CircularProgressIndicator());
+              })),
+    );
+  }
 }
 
 class IconContainer extends StatelessWidget {

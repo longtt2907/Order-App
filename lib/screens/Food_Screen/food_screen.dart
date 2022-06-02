@@ -40,11 +40,9 @@ class _FoodScreenState extends State<FoodScreen> {
   }
 
   _handleFood(Product food) {
-    print(listProducts.length);
     setState(() {
       listProducts = [...listProducts, food];
     });
-    print(listProducts.length);
 
     // print(food);
   }
@@ -214,12 +212,11 @@ class _FoodScreenState extends State<FoodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Quản lý món ăn"),
-        centerTitle: true,
+        title: Text("Quản lý món ăn", style: TextStyle(color: kBlackColor)),
         leading: BackButton(
-            color: Colors.white, onPressed: () => {Navigator.pop(context)}),
-        backgroundColor: kPrimaryColor,
-        elevation: 4,
+            color: kBlackColor, onPressed: () => {Navigator.pop(context)}),
+        backgroundColor: Colors.white,
+        elevation: 2,
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
