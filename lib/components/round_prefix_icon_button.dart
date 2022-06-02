@@ -18,16 +18,14 @@ class RoundPrefixIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(10),
+        // padding: EdgeInsets.all(10),
         width: 200,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
             color: color,
             boxShadow: [
               BoxShadow(
-                  color: kPrimaryColor.withOpacity(1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 0))
+                  color: color, blurRadius: 20, offset: const Offset(0, 0))
             ]),
         child: TextButton(
 

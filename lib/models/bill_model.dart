@@ -23,7 +23,7 @@ class Bill {
       this.type});
   factory Bill.fromJson(Map<String, dynamic> json) {
     List<dynamic> bodyDish = json['dishes'];
-
+    // print(json['user']);
     List<Dish> dishes =
         bodyDish.map((dynamic item) => Dish.fromJson(item)).toList();
     return Bill(

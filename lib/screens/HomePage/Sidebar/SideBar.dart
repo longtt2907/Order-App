@@ -3,6 +3,7 @@
 import 'package:demo_12_03/screens/AddFood/AddFood.dart';
 import 'package:demo_12_03/screens/AddOption_tamthoi/AddOption_main.dart';
 import 'package:demo_12_03/screens/Food_Screen/food_screen.dart';
+import 'package:demo_12_03/screens/HomePage/HomePage.dart';
 import 'package:demo_12_03/screens/Login/login_screen.dart';
 import 'package:demo_12_03/screens/Order/Order.dart';
 import 'package:demo_12_03/screens/Receipt/reciept.dart';
@@ -32,15 +33,15 @@ class _SidebarState extends State<Sidebar> {
     log('$checkMatHang');
   }
 
-  void clickDoanhThu() {
-    setState(() {
-      checkDoanhThu = !checkDoanhThu;
-      if (checkMatHang = true) {
-        checkMatHang = !checkMatHang;
-      }
-    });
-    log('$checkDoanhThu');
-  }
+  // void clickDoanhThu() {
+  //   setState(() {
+  //     checkDoanhThu = !checkDoanhThu;
+  //     if (checkMatHang = true) {
+  //       checkMatHang = !checkMatHang;
+  //     }
+  //   });
+  //   log('$checkDoanhThu');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,36 +61,36 @@ class _SidebarState extends State<Sidebar> {
                 buildMenuItem(
                   text: "Quản lí doanh thu",
                   icon: Icons.manage_accounts,
-                  onTap: () => clickDoanhThu(),
+                  onTap: () => () => selectedItem(context, 0),
                 ),
-                checkDoanhThu != false
-                    ? Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                color: Colors.white,
-                                style: BorderStyle.solid,
-                                width: 0.8),
-                          ),
-                        ),
-                        child: ListView(shrinkWrap: true, children: [
-                          buildMenuChildItem(
-                            text: "Ngày",
-                            onTap: () => selectedItem(context, 0),
-                          ),
-                          const SizedBox(height: 10),
-                          buildMenuChildItem(
-                            text: "Tháng",
-                            onTap: () => selectedItem(context, 1),
-                          ),
-                          const SizedBox(height: 10),
-                          buildMenuChildItem(
-                            text: "Năm",
-                            onTap: () => selectedItem(context, 2),
-                          ),
-                        ]))
-                    : const SizedBox(height: 0),
+                // checkDoanhThu != false
+                //     ? Container(
+                //         padding: EdgeInsets.symmetric(horizontal: 10),
+                //         decoration: BoxDecoration(
+                //           border: Border(
+                //             bottom: BorderSide(
+                //                 color: Colors.white,
+                //                 style: BorderStyle.solid,
+                //                 width: 0.8),
+                //           ),
+                //         ),
+                //         child: ListView(shrinkWrap: true, children: [
+                //           buildMenuChildItem(
+                //             text: "Ngày",
+                //             onTap: () => selectedItem(context, 0),
+                //           ),
+                //           const SizedBox(height: 10),
+                //           buildMenuChildItem(
+                //             text: "Tháng",
+                //             onTap: () => selectedItem(context, 1),
+                //           ),
+                //           const SizedBox(height: 10),
+                //           buildMenuChildItem(
+                //             text: "Năm",
+                //             onTap: () => selectedItem(context, 2),
+                //           ),
+                //         ]))
+                //     : const SizedBox(height: 0),
                 const SizedBox(height: 16),
                 buildMenuItem(
                   text: "Quản lí mặt hàng",
@@ -111,34 +112,39 @@ class _SidebarState extends State<Sidebar> {
                           const SizedBox(height: 10),
                           buildMenuChildItem(
                             text: "Quản lí danh mục",
-                            onTap: () => selectedItem(context, 3),
+                            onTap: () => selectedItem(context, 1),
                           ),
                           const SizedBox(height: 10),
                           buildMenuChildItem(
                             text: "Quản lí thực đơn",
-                            onTap: () => selectedItem(context, 4),
+                            onTap: () => selectedItem(context, 2),
                           ),
                         ]))
                     : const SizedBox(height: 0),
                 const SizedBox(height: 16),
                 buildMenuItem(
                   text: "Quản lí đơn hàng",
-                  onTap: () => selectedItem(context, 5),
+                  onTap: () => selectedItem(context, 3),
                   icon: Icons.production_quantity_limits,
                 ),
                 const SizedBox(height: 16),
                 buildMenuItem(
                   text: "Quản lí thiết bị",
                   icon: Icons.manage_accounts,
-                  onTap: () => selectedItem(context, 6),
+                  onTap: () => selectedItem(context, 4),
                 ),
                 const SizedBox(height: 16),
                 const Divider(color: Colors.white70, thickness: 1.0),
                 const SizedBox(height: 16),
                 buildMenuItem(
+                  text: "Chuyển sang order",
+                  icon: Icons.manage_accounts,
+                  onTap: () => selectedItem(context, 5),
+                ),
+                buildMenuItem(
                   text: "Đăng xuất",
                   icon: Icons.manage_accounts,
-                  onTap: () => selectedItem(context, 7),
+                  onTap: () => selectedItem(context, 6),
                 ),
               ],
             )));
@@ -149,28 +155,32 @@ void selectedItem(BuildContext context, int index) {
   Navigator.pop(context);
   switch (index) {
     case 0:
-    case 1:
-    case 2:
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Order(),
+        builder: (context) => HomePage(),
       ));
       break;
-    case 3:
+    case 1:
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => AddOptionMain(),
       ));
 
       break;
-    case 4:
+    case 2:
       Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => FoodScreen(),
           ));
       break;
-    case 5:
+    case 3:
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ReceiptManage(),
+      ));
+      break;
+    case 4:
+    case 5:
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Order(),
       ));
       break;
     case 7:
