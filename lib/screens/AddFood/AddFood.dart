@@ -16,7 +16,9 @@ import 'package:uuid/uuid.dart';
 
 class AddFood extends StatelessWidget {
   final Product? product;
-  const AddFood({Key? key, this.product}) : super(key: key);
+  final Function handleFood;
+  const AddFood({Key? key, this.product, required this.handleFood})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class AddFood extends StatelessWidget {
         ),
         body: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: size.height),
-          child: InfoContainer(product: product),
+          child: InfoContainer(product: product, handleFood: handleFood),
         ));
   }
 }
@@ -44,10 +46,9 @@ class DanhMuc {
 
 class InfoContainer extends StatefulWidget {
   final Product? product;
-  const InfoContainer({
-    Key? key,
-    this.product,
-  }) : super(key: key);
+  final Function handleFood;
+  const InfoContainer({Key? key, this.product, required this.handleFood})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AddFoodState();
@@ -145,11 +146,14 @@ class _AddFoodState extends State<InfoContainer> {
 
     if (isEdit) {
       productService.updateProduct(newProduct).then((result) {
-        Navigator.pop(context, result);
+        widget.handleFood(result);
+        Navigator.pop(context);
       });
     } else {
       productService.createProduct(newProduct).then((result) {
-        Navigator.pop(context, result);
+        widget.handleFood(result);
+
+        Navigator.pop(context);
       });
     }
   }

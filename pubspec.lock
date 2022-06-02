@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  eventify:
+    dependency: transitive
+    description:
+      name: eventify
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -135,6 +142,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct dev"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "8.0.9"
   http:
     dependency: transitive
     description:
@@ -219,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  momo_vn:
+    dependency: "direct main"
+    description:
+      name: momo_vn
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   path:
     dependency: transitive
     description:
@@ -266,6 +287,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliding_up_panel:
+    dependency: "direct main"
+    description:
+      name: sliding_up_panel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0+1"
   source_span:
     dependency: transitive
     description:

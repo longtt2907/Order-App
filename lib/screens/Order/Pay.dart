@@ -38,7 +38,7 @@ class _PayState extends State<Pay> {
       dish: widget.product,
       subDish: subDish,
       size: dishSize,
-      price: priceInfo,
+      // price: priceInfo,
       totalPrice: (priceDetail + priceInfo) * quantity,
       quantity: quantity,
       note: description,

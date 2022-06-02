@@ -197,6 +197,13 @@ class _AddOptionMainState extends State<AddOptionMain> {
           backgroundColor: kPrimaryColor,
           elevation: 4,
         ),
+        floatingActionButton: FloatingActionButton(
+                            onPressed: () {
+                              openDialog(context);
+                            },
+                            backgroundColor: kPrimaryColor,
+                            child: Icon(Icons.add),
+                          ),
         body: FutureBuilder(
             future: categoryService.getCategories(),
             builder:
@@ -212,19 +219,6 @@ class _AddOptionMainState extends State<AddOptionMain> {
                         Expanded(
                           child: showListCategory(),
                         ),
-                        Container(
-                          alignment: Alignment.bottomRight,
-                          height: size.width * 0.2,
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              openDialog(context);
-                            },
-                            backgroundColor: kPrimaryColor,
-                            child: Icon(Icons.add),
-                          ),
-                        )
                       ],
                     ));
               }

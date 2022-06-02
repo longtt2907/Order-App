@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:demo_12_03/components/dotted_divider.dart';
 import 'package:demo_12_03/constants.dart';
+import 'package:demo_12_03/controllers/bill_controller.dart';
 import "package:flutter/material.dart";
 
 import 'package:demo_12_03/models/bill_model.dart';
@@ -30,6 +31,12 @@ class _OrderListState extends State<OrderList> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => Order(bill: bill),
     ));
+  }
+
+  void handleSubmit() {
+    BillService().createbill(widget.bill).then((result) {
+      log("${result}");
+    });
   }
 
   void handleDelete(Dish dish) {
@@ -178,7 +185,7 @@ class _OrderListState extends State<OrderList> {
                     child: OrderListButton(
                       title: "Hoàn tất",
                       color: kPrimaryColor,
-                      onPressed: () {},
+                      onPressed: () => {handleSubmit()},
                     ),
                   ),
                 ],
@@ -290,69 +297,73 @@ class _ItemListState extends State<ItemList> {
                   )),
             ],
           ),
-          Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(width: 5),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: buildList(),
-                ),
-              ),
-              Container(
-                height: 70,
-                // alignment: Alignment.center,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.black,
-                          )),
-                          child:
-                              Text("-", style: TextStyle(color: Colors.white)),
-                          onPressed: () => subtract(),
-                        ),
-                      ),
-                      Container(
-                          alignment: Alignment.center,
-                          width: 30,
-                          height: 30,
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.black,
-                                  width: 1.0,
-                                  style: BorderStyle.solid)),
-                          child: Text("${widget.dish.quantity}",
-                              style: TextStyle(fontWeight: FontWeight.bold))),
-                      SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black)),
-                          child:
-                              Text("+", style: TextStyle(color: Colors.white)),
-                          onPressed: () => add(),
-                        ),
-                      ),
-                      // TextField(
-                      //   keyboardType: TextInputType.number,
-                      // ),
-                    ],
+          Expanded(
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: buildList(),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  height: 70,
+                  // alignment: Alignment.center,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                              Colors.black,
+                            )),
+                            child: Text("-",
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () => subtract(),
+                          ),
+                        ),
+                        Container(
+                            alignment: Alignment.center,
+                            width: 30,
+                            height: 30,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.black,
+                                    width: 1.0,
+                                    style: BorderStyle.solid)),
+                            child: Text("${widget.dish.quantity}",
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black)),
+                            child: Text("+",
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () => add(),
+                          ),
+                        ),
+                        // TextField(
+                        //   keyboardType: TextInputType.number,
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           widget.dish.note!.isEmpty
               ? const SizedBox(height: 0)
@@ -372,9 +383,7 @@ class _ItemListState extends State<ItemList> {
                     ],
                   ),
                 ),
-          Expanded(
-              child:
-                  Dash(length: size.width - 40, dashColor: kBackgroundColor)),
+          Dash(length: size.width - 40, dashColor: kBackgroundColor),
           // Divider(thickness: 1.0),
         ],
       ),

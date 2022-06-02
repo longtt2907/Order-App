@@ -15,8 +15,10 @@ class DropDownList extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
+      height: 50,
       padding: EdgeInsets.symmetric(
         horizontal: 20,
+        vertical: 10,
       ),
       decoration: BoxDecoration(
         color: Colors.white,

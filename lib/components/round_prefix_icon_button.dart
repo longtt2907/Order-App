@@ -24,8 +24,8 @@ class RoundPrefixIconButton extends StatelessWidget {
             color: color,
             boxShadow: [
               BoxShadow(
-                  color: kPrimaryColor.withOpacity(1),
-                  blurRadius: 20,
+                  color: color.withOpacity(1),
+                  blurRadius: 10,
                   offset: const Offset(0, 0))
             ]),
         child: TextButton(
@@ -33,7 +33,8 @@ class RoundPrefixIconButton extends StatelessWidget {
             // ignore: prefer_const_constructors
             style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
+                overlayColor:
+                    MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100),
