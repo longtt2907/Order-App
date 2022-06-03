@@ -9,6 +9,7 @@ import 'package:demo_12_03/screens/Order/Order.dart';
 import 'package:demo_12_03/screens/Receipt/reciept.dart';
 import 'package:demo_12_03/constants.dart';
 import "package:flutter/material.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
 final padding = EdgeInsets.symmetric(horizontal: 20);
@@ -151,6 +152,11 @@ class _SidebarState extends State<Sidebar> {
   }
 }
 
+void handleSignout() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.remove("user_id");
+}
+
 void selectedItem(BuildContext context, int index) {
   Navigator.pop(context);
   switch (index) {
@@ -183,10 +189,10 @@ void selectedItem(BuildContext context, int index) {
         builder: (context) => Order(),
       ));
       break;
-    case 7:
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Login(),
-      ));
+    case 6:
+      handleSignout();
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Login()));
       break;
   }
 }

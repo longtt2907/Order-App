@@ -42,6 +42,7 @@ class _MultiSelectedState extends State<MultiSelected> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print(widget.selectedItems);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: widget.items
@@ -101,6 +102,7 @@ class _MultiSelectedState extends State<MultiSelected> {
                           ),
                         ),
                         onTap: () {
+                          print(widget.selectedItems.contains(item));
                           _itemChange(
                               item, !widget.selectedItems.contains(item));
                         }),

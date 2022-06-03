@@ -30,6 +30,7 @@ class _ProductDetailState extends State<ProductDetail> {
   late String dishSize = widget.product.prices[0].title;
   late int quantity = 1;
   late List<Product> subDish = [];
+  late String userId;
   // late String priceChoosed = '';
 
   void handleSubmit() {
@@ -49,6 +50,7 @@ class _ProductDetailState extends State<ProductDetail> {
     } else {
       Bill newBill = Bill(
         id: '1',
+        // user:userId,
         dishes: [newDish],
         total: newDish.quantity,
         totalPrice: newDish.totalPrice,
@@ -172,6 +174,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       widget.product.isLinked
                           ? Submenu(
                               product: widget.product,
+                              subDish: subDish,
                               onChanged: (items) {
                                 priceDetail = 0;
                                 subDish = items;
@@ -314,9 +317,9 @@ class _SizeContainerState extends State<SizeContainer> {
                 size: price.title,
                 choosen: priceChoosed == price.title ? true : false,
                 onChanged: () {
-                  setState(() {
-                    priceChoosed = price.title;
-                  });
+                  // setState(() {
+                  priceChoosed = price.title;
+                  // });
                   widget.onChanged(price);
                 }))
             .toList(),
@@ -330,10 +333,12 @@ class Submenu extends StatefulWidget {
     Key? key,
     required this.product,
     required this.onChanged,
+    required this.subDish,
   }) : super(key: key);
 
   final Product product;
   final Function(List<Product>) onChanged;
+  final List<Product> subDish;
 
   @override
   State<Submenu> createState() => _SubmenuState();
@@ -344,6 +349,9 @@ class _SubmenuState extends State<Submenu> {
   List<Product> itemsSelected = [];
   @override
   Widget build(BuildContext context) {
+    widget.subDish.isEmpty
+        ? itemsSelected = []
+        : itemsSelected = widget.subDish;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
@@ -371,7 +379,7 @@ class _SubmenuState extends State<Submenu> {
                     items: items,
                     selectedItems: itemsSelected,
                     onChanged: (val) {
-                      itemsSelected = val as List<Product>;
+                      itemsSelected = val;
                       widget.onChanged(itemsSelected);
                     },
                   ),

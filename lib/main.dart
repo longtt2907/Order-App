@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
             primaryColor: kPrimaryColor,
             scaffoldBackgroundColor: Colors.white,
             backgroundColor: Colors.white),
-        home: HomePage(),
+        home: Login(),
       ),
     );
   }

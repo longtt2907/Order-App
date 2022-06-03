@@ -10,6 +10,7 @@ import 'package:demo_12_03/models/bill_model.dart';
 import 'package:momo_vn/momo_vn.dart';
 import 'Order.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderList extends StatefulWidget {
   OrderList({Key? key, required this.bill}) : super(key: key);
@@ -24,6 +25,7 @@ class _OrderListState extends State<OrderList> {
   late MomoVn _momoPay;
   late PaymentResponse _momoPaymentResult;
   late String _paymentStatus;
+  late String userId;
 
   @override
   void initState() {
@@ -33,6 +35,13 @@ class _OrderListState extends State<OrderList> {
     _momoPay.on(MomoVn.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
     initPlatformState();
+    loadUserId();
+  }
+
+  void loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString("user_id")!;
+    print(userId);
   }
 
   Future<void> initPlatformState() async {
@@ -127,7 +136,7 @@ class _OrderListState extends State<OrderList> {
 
   void handleSubmit() {
     widget.bill.status = true;
-    BillService().createbill(widget.bill).then((result) {
+    BillService().createbill(widget.bill, userId).then((result) {
       log("${result}");
       handleDeleteBill();
     });
@@ -231,7 +240,7 @@ class _OrderListState extends State<OrderList> {
 
   void handleSave() {
     widget.bill.status = false;
-    BillService().createbill(widget.bill).then((result) {
+    BillService().createbill(widget.bill, userId).then((result) {
       log("${result}");
       handleDeleteBill();
     });

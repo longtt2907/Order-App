@@ -82,7 +82,7 @@ class AuthService {
     }
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<String> login(String email, String password) async {
     Response res = await post(Uri.parse("$authUrl/login"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -93,9 +93,10 @@ class AuthService {
         }));
 
     if (res.statusCode == 200) {
-      return true;
+      dynamic body = jsonDecode(res.body);
+      return body;
     } else {
-      return false;
+      return "";
     }
   }
 }

@@ -21,7 +21,7 @@ class BillService {
     }
   }
 
-  Future<Bill> createbill(Bill bill) async {
+  Future<Bill> createbill(Bill bill, String userId) async {
     List jsonList = bill.dishes.map((dish) {
       List subDishList = dish.subDish.map((item) => item.id).toList();
       return {
@@ -37,7 +37,7 @@ class BillService {
     Response res = await post(Uri.parse(billUrl),
         headers: {'Content-Type': 'application/json; charset=utf-8'},
         body: jsonEncode({
-          "user": "627f25143ecf34dee89e1aee",
+          "user": userId,
           "dishes": jsonList,
           "total": bill.totalPrice,
           "status": bill.status,

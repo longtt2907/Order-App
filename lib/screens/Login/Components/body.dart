@@ -7,8 +7,10 @@ import 'package:demo_12_03/components/round_button.dart';
 import 'package:demo_12_03/components/text_field_container.dart';
 import 'package:demo_12_03/components/text_input_field.dart';
 import 'package:demo_12_03/constants.dart';
+import 'package:demo_12_03/screens/Login/login_screen.dart';
 import 'package:demo_12_03/screens/SignUp/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Body extends StatefulWidget {
@@ -45,15 +47,18 @@ class _BodyState extends State<Body> {
   // }
 
   void handleSubmit() async {
+    final prefs = await SharedPreferences.getInstance();
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => Center(child: CircularProgressIndicator()));
 
-    await _authService.login(_email, _password).then((isSuccess) {
-      if (isSuccess) {
+    await _authService.login(_email, _password).then((userId) {
+      if (userId.contains("")) {
+        prefs.setString("user_id", userId);
         Navigator.of(context).pop();
-
+        String? userIdd = prefs.getString("user_id");
+        print(userIdd);
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => HomePage()));
       } else {
